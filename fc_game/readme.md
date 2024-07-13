@@ -1,1 +1,1 @@
-<h1>Colorful FreeCell CLI App (python)</h1>
+<h1 style="color:magenta;">Colorful FreeCell CLI App (python)</h1>
