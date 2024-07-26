@@ -49,22 +49,22 @@ def restartfromdb():
     qq=gamer.tablClass.EMPTYROW
     gamer.tablClass.tablow.append(qq)
     gamer.tablClass.gameid=sql3class.readFirstGamesRec()
-    gamer.tablClass.moveid,gamer.tablClass.lresult=sql3class.readlastrecord()
-    cardj=[]#['xx8Cxxxx2C6D3H5S', 
-             #'7HKSKDxxxxxx4CKH', 
-             #'9HKCQCxx9Cxx4HQS', 
-             #'3CxxJDxx8HxxJCJH', 
-             #'QDxxTSxxxxxxxxTC', 
-             #'7Sxxxxxxxxxxxx9D', 
-             #'6Sxxxxxxxxxxxx8S', 
-             #'QHxxxxxxxxxxxx7D', 
-             #'JSxxxxxxxxxxxx6C', 
-             #'TDxxxxxxxxxxxx5H', 
-             #'9Sxxxxxxxxxxxxxx', 
-             #'8Dxxxxxxxxxxxxxx', 
-             #'7Cxxxxxxxxxxxxxx', 
-             #'6Hxxxxxxxxxxxxxx', 
-             #'5Cxxxxxxxxxxxxxx']        # 3, 67,
+    gamer.tablClass.moveid, gamer.tablClass.lresult = sql3class.readlastrecord()
+    cardj = ['xx8Cxxxx2C6D3H5S', 
+             '7HKSKDxxxxxx4CKH', 
+             '9HKCQCxx9Cxx4HQS', 
+             '3CxxJDxx8HxxJCJH', 
+             'QDxxTSxxxxxxxxTC', 
+             '7Sxxxxxxxxxxxx9D', 
+             '6Sxxxxxxxxxxxx8S', 
+             'QHxxxxxxxxxxxx7D', 
+             'JSxxxxxxxxxxxx6C', 
+             'TDxxxxxxxxxxxx5H', 
+             '9Sxxxxxxxxxxxxxx', 
+             '8Dxxxxxxxxxxxxxx', 
+             '7Cxxxxxxxxxxxxxx', 
+             '6Hxxxxxxxxxxxxxx', 
+             '5Cxxxxxxxxxxxxxx']        # 3, 67,
     cardk = [ '8H8C5Cxx2C6D3H5S',        
              '7HKSKDxxTDxx4CKH', 
              '9HKCQCxx9Cxx4HQS', 
@@ -186,7 +186,7 @@ outc=[[ '0', '0', '0', '0', '0', '0', '0', '0'],     #0
       [ '0', '0', '0', '0', '0', '0', '0', '0'],    #20
       [ '0', '0', '0', '0', '0', '0', '0', '0'],    #21
       [ '0', '0', '0', '0', '0', '0', '0', '0']]    #22   
-deckB,deckC = deckA.turnTestdeckIntoDeck()
+#deckB,deckC = deckA.turnTestdeckIntoDeck()
 outa=[[ '0', '0', '0','0','2C','2D','5H','5S'],          
       [ '0','KS','KD','0', '0','KC', '0','KH'],    
       [ '0','QD','QC','0', '0','QH', '0','QS'],    
@@ -203,17 +203,20 @@ outa=[[ '0', '0', '0','0','2C','2D','5H','5S'],
 #for i,z in enumerate(tablow):    #if i%8==0:    #    print()
 #    rp(f'{z}')
 suit1=card.suit_list; rank1=card.rank_list;tablow=[]
-tablow=restartfromdb()
-print();prtit.printTableau(tablow)
+#tablow=restartfromdb()
+#print();prtit.printTableau(tablow)
 mou=1;w2=card(rank1.index('2'),suit1.index('D'))
 qq=['00' if p != mou else str(w2) for p in range(8)]
+nminp='';minp='3d'
+nminp = ''.join(minp[i] if str(minp[i]).isalpha() else minp[i] for i in range(2) )
+#nminp+=minp[i].upper()  if str(minp[i]).isalpha() else minp[i] for i in range(2)
 #tablow.append(qq)
 #for po in tablow:
 #    rp(f'{po }',end=', ')
 love='Love';running=False;dek=0;   
 #running, dek, tablow, idx4lastcards = getidx4lastcards(running, dek, tablow)
 rp(f'{love}{qq}')#{idx4lastcards=}
-print();prtit.printTableau(tablow)
+#print();prtit.printTableau(tablow)
 #getFieldNamesfromPRAGMAtable_info(tablow)
 strlove='''
 ________________________________________

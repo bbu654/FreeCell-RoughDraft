@@ -6,60 +6,127 @@ from rich.console  import Console
 from rich.pretty   import pprint
 import sqlite3         as sql3
 import tableau_mine    as Tableau
+import copy
 from fc_rules_mine import Rules as Rule
-from fc_cons_New1  import *
+
 rule=Rule()
+BLANK_CARD='__'
+EMPTYROW=[BLANK_CARD for _ in range(8)]
+suitlit = ['[white]__[/]']
+SYMBOL={'C':'♣','D':'♦','H':'♥','S':'♠'}
+COLORS={'C':'[blue]','D':'[bright_magenta]','H':'[red]','S':'[dark_green]'}
+#suitlitN= ['[white]0[/]']
+for bt in SYMBOL:
+    for bu in card.rank_list[1:]:
+        suitlit.append(f'{COLORS[bt]}{bu}{SYMBOL[bt]}[/]')    
+'''for at in SYMBOL:
+    for au in range(1,14):
+        if au == 1:
+            suitlit.append(f'{COLORS[at]}A{SYMBOL[at]}[/]')    
+        elif au == 10:
+            suitlit.append(f'{COLORS[at]}T{SYMBOL[at]}[/]')
+        elif au == 11:
+            suitlit.append(f'{COLORS[at]}J{SYMBOL[at]}[/]')
+        elif au == 12:
+            suitlit.append(f'{COLORS[at]}Q{SYMBOL[at]}[/]')
+        elif au == 13:
+            suitlit.append(f'{COLORS[at]}K{SYMBOL[at]}[/]')
+        else:
+            suitlit.append(f'{COLORS[at]}{str(au)}{SYMBOL[at]}[/]')'''
+  
+output={}#nextCards
+for j in range(3,13+1):
+    for k in range(2):
+        output[j+(13*k)] = [j+(13*2)-1, j+(13*3)-1]
+        output[j+(13*(k+2))] = [j-1, j+12]
+        
+j=0
+k=0
+validsuit={'C':['D','H'], 'D':['C','S'], 'H':['C','S'], 'S':['D','H'] }
+nextCard = {}
+for vsuit in validsuit:
+    for idx, vrank in enumerate(card.rank_list[3:]):
+        nextCard[vrank+vsuit]=[card.rank_list[idx+2]+validsuit[vsuit][0],card.rank_list[idx+2]+validsuit[vsuit][1]]
+
 
 class PrintItBBU(object):
-    def __init__(self) -> None:
-        pass
-    # rp(f'{nextCard}',sep=' ',end='')rp(f'{nextCard}',sep=' ',end='')
-    def printTableau(self,tablow, reason=[]):
-        
-        tview = Table(title='My FreeCell - BBU')
-        cc =['','','','','','','','']
-        for idy,row1 in enumerate(tablow):
-            strRow=['','','','','','','',''] #str4=zip(row1)        #str5=str4        str0=''
-            for idx,col1 in enumerate(row1):
-                col2=str(col1)
-                if col2 == BLANKCARD or col2=='' or col2=='0' or col2=='_' or col2=='XX' or col2=='xx':
-                    stra=f'[white]{BLANKCARD}[/]'                
-                else:
-                    #indx0= Card.rank_list.index(str(col1)[2])
-                    #indx1= Card.suit_list.index(str(col1)[7]) 
-                    stra=f'{COLORS[col2[1]]}{col2[0]}{SYMBOL[col2[1]]}[/]'
-                if idy==0:#strx=str(col1)    if col1 == BLANKCARD:    tview.add_column(f'[white]BLANKCARD[/]')    else:    tview.add_column(f'{COLORS[col1[1]]}{col1[0]}{SYMBOL[col1[1]]}[/]')                    # tview.add_column(suitlit1[idx])
-                    tview.add_column(stra)
-                else:
-                    strRow[idx] += stra #    if col1 == BLANKCARD:    strRow[idx] += f'[white]BLANKCARD[/]'       else:    strRow[idx] += f'{COLORS[col1[1]]}{col1[0]}{SYMBOL[col1[1]]}[/]'  
-            if row1 != cc and row1 != EMPTYROW:
-                tview.add_row(strRow[0],strRow[1],strRow[2],strRow[3],\
-                              strRow[4],strRow[5],strRow[6],strRow[7])
-        consol=Console()    
-        consol.print(tview,justify='center')
+    def __init__(self, newtablowDC) -> None:
+        self.newtablowDC2self(newtablowDC)
+
+    def newtablowDC2self(self, tabloDC):
+        ''' copy.deepcopy tablodc to self'''
+        if tabloDC.isdirty:
+            self.running = tabloDC.running
+            self.newGame = tabloDC.newGame
+            self.restart = tabloDC.restart
+            self.moveing = tabloDC.moveing
+            self.noAbend = tabloDC.noAbend
+            self.winning = tabloDC.winning
+            self.verbose = tabloDC.verbose
+            self.isdirty = tabloDC.isdirty
+            self.maxmvid = tabloDC.maxmvid
+            self.gameid  = tabloDC.gameid
+            self.moveid  = tabloDC.moveid
+            self.sbckN4h = copy.deepcopy(tabloDC.sbckN4h)
+            self.ogtablo = copy.deepcopy(tabloDC.ogtablo)
+            self.reasonx = copy.deepcopy(tabloDC.reasonx)
+            self.posdict = copy.deepcopy(tabloDC.posdict)
+            self.tablown = copy.deepcopy(tabloDC.tablown)
+
+    def self2newtablowDC(self, tabloDC):
+        ''' Just the non_list fields    '''
+        if self.isdirty: 
+            tabloDC.gameid  = self.gameid 
+            tabloDC.running = self.running
+            tabloDC.newGame = self.newGame
+            tabloDC.restart = self.restart
+            tabloDC.moveing = self.moveing
+            tabloDC.noAbend = self.noAbend
+            tabloDC.winning = self.winning
+            tabloDC.verbose = self.verbose
+            tabloDC.isdirty = self.isdirty
+            tabloDC.sbckN4h = copy.deepcopy(self.sbckN4h)
+            tabloDC.ogtablo = copy.deepcopy(self.ogtablo)
+            tabloDC.reason  = copy.deepcopy(self.reason)
+            tabloDC.posdic  = copy.deepcopy(self.posdic)
+            tabloDC.tablow  = copy.deepcopy(self.tablown)
+    # rp    (f'{nextCard}',sep=' ',end='')rp(f'{nextCard}',sep=' ',end='')
+    def printTableau(self,tableauNew=None):
+        if tableauNew != None:
+            gameview = Table(title='New Freecell')
+            cc=['','','','','','','','']
+            for idy,row1    in enumerate(tableauNew.tablown):
+                strRow=['','','','','','','',''] #str4=zip(row1)        #str5=str4        str0=''
+                for idx,col1 in enumerate(row1):
+                    col2=str(col1)
+                    if col2 == BLANK_CARD or col2=='' or col2=='0' or col2=='_' or col2=='XX' or col2=='xx':
+                        stra=f'[white]{BLANK_CARD}[/]'                
+                    else:
+                        stra=f'{COLORS[col2[1]]}{col2[0]}{SYMBOL[col2[1]]}[/]'
+                    if idy==0:#strx=str(col1)    if col1 == '0':    tview.add_column(f'[white]0[/]')    else:    tview.add_column(f'{COLORS[col1[1]]}{col1[0]}{SYMBOL[col1[1]]}[/]')                    # tview.add_column(suitlit1[idx])
+                        gameview.add_column(stra)
+                    else:
+                        strRow[idx] += stra #    if col1 == '0':    strRow[idx] += f'[white]0[/]'       else:    strRow[idx] += f'{COLORS[col1[1]]}{col1[0]}{SYMBOL[col1[1]]}[/]'  
+                if row1 != cc and row1 != ['__' for zz in range(8)] and row1 != ['0' for zz in range(8)]:
+                    gameview.add_row(strRow[0],strRow[1],strRow[2],strRow[3],\
+                                     strRow[4],strRow[5],strRow[6],strRow[7])
+            consol=Console()    
+            consol.print(gameview,justify='center')
         #return tablow
-        if reason != None:
-            if len(reason) > 1:
-                rp(f'{[ti for ti in reason[1:]]}',sep='')
+            if tableauNew.reasonx != None:
+                if len(tableauNew.reasonx) > 1:
+                    rp(f'{[ti for ti in tableauNew.reasonx[1:]]}',sep='   ')
+
     def printSQLRow(self, sqlrow):
-        outa=[]
         for rowa in sqlrow[3:]:
             if rowa != None:
                 pass
-
-
-
 
     def printConst(self):
         self.printSuitLit()
         self.printnextCard()
 
     def printSuitLit(self):
-        #rp(f'suitlit={suitlit[0]}')
-        #rp(f"{suitlit[1:15]=}",sep=' ')
-        #rp(f"{suitlit[15:28]=}",sep=' ')
-        #rp(f"{suitlit[28:41]=}",sep=' ')
-        #rp(f"{suitlit[41:]=}",sep=' ')
         rp(f'    {suitlit[0]=}')
         rp(f"{ suitlit[1:14]=}",sep=' ')
         rp(f"{suitlit[14:27]=}",sep=' ')
@@ -72,59 +139,16 @@ class PrintItBBU(object):
             if idxc%10==0 and idxc<0:
                 print()
             rp(f'{COLORS[key[1]]}{key}:{nextCard[key]}[/]',end=', ')
-            '''if str(keys)[1] == 'C':
-                rp(f'[{{keys}:{nextCard[keys]}[/]',sep=', ')
-            if str(keys)[1] == 'C':
-                rp(f'[blue]{keys}:{nextCard[keys]}[/]',sep=', ')
-            if str(keys)[1] == 'C':
-                rp(f'[blue]{keys}:{nextCard[keys]}[/]',sep=', ')
-            if str(keys)[1] == 'C':
-                rp(f'[blue]{keys}:{nextCard[keys]}[/]',sep=', ')'''
-
-        #rp(f'{nextCard=}',sep=' ',end=', ')    
-
-
-    def rprnt(self,tablow):
-        #above is init     below is rpit
-        gameview = Table(title='Freecell')
-        #for qe in range(8):
-        #   gameview.add_column('')
-        for idy,row1 in enumerate(tablow):
-            #str4=zip(row1)        #str5=str4
-            str0='';str1='';str2='';str3=''
-            str4='';str5='';str6='';str7='';stra=''
-            for idx,col1 in enumerate(row1):
-                col2=str(col1)
-                if col2 == BLANKCARD:
-                    stra=f'[white]BLANKCARD[/]'                
-                else:
-                    stra=f'{COLORS[col2[1]]}{col2[0]}{SYMBOL[col2[1]]}[/]'
-                if idy==0:#strx=str(col1)
-                    gameview.add_column(stra)
-                        # gameview.add_column(suitlit1[idx])
-                else:
-                    if idx == 0:                      str0+=stra
-                    elif idx == 1:                    str1+=stra
-                    elif idx == 2:                    str2+=stra
-                    elif idx == 3:                    str3+=stra
-                    elif idx == 4:                    str4+=stra                    
-                    elif idx == 5:                    str5+=stra
-                    elif idx == 6:                    str6+=stra
-                    elif idx == 7:                    str7+=stra
-                        #if col1 == BLANKCARD:
-                        #    str7+=f'[white]BLANKCARD[/]'
-                        #else:
-                        #    str7+= f'{COLORS[col1[1]]}{col1[0]}{SYMBOL[col1[1]]}[/]'
-                        #str7+=f'{suitlit1[idx]}'
-            if row1 !=  EMPTYROW:#[BLANKCARD for _ in range(8)]:
-                gameview.add_row(str0,str1,str2,str3,str4,str5,str6,str7)
-        consol=Console()    
-        consol.print(gameview)
-        self.printTableau(tablow)        
-        return tablow
 
     def getAnswer(self,question = f'card, dest|FF,GG,Q: '):
-        answer = input(question)
+        validAnswer=False; reason=[]
+        while not validAnswer:
+            if reason !=[]:
+                strreason= ' '.join(reason)
+                question = strreason + question
+                reason=[]
+            validAnswer, answer, reason = rule.getValidAnswer(input(question))
+
         return answer
     
 class SQLiteIO(object):
@@ -140,14 +164,18 @@ class SQLiteIO(object):
                  "row15", "row16",  "row17",  "row18", "row19", "row20", 
                  "row21", "row22" ] 
 
-    def __init__(self) -> None:
+    def __init__(self, tabloDC=None) -> None:
+        if tabloDC != None:
+            self.tabloDC = copy.deepcopy(tabloDC)
+            if not self.tabloDC.verbose:
+                rp(f'{dir(self.tabloDC)}')
                 # connecting to the database
         self.conn = sql3.connect("fc_SQLite3_FC.sqlite3")
         self.cursorSQL3=self.conn.cursor()
         self.getFieldNamesfromPRAGMAtable_info()
-        self.allMoveSQLFwdBack = []
-        self.brichp1=PrintItBBU()
-        self.maxmoveid=1
+        self.sBckN4h = []
+        self.brichp1=PrintItBBU(tabloDC)
+        self.maxmoveid=1;self.gameid=1;self.moveid=1
     def getFieldNamesfromPRAGMAtable_info(self):
         """This script will print out each column's name from the users table. The PRAGMA statement returns a list of tuples, where each tuple represents a column. The second element in each tuple (index 1) is the column name.
         While this method is more verbose than the basic example, it also provides additional details about each column, such as data type, whether the column can hold NULL values, and the default value for the column, among others.
@@ -221,63 +249,32 @@ class SQLiteIO(object):
 
         print("Record inserted successfully")
         return tablow,self.gameid,self.moveid
-    
-    def handlebackfwd(self, running, tablow, answer, reason):
-        """running,self.moveing, tablow, self.reason = bsqlt3.handlebackfwd(running,tablow, answer,self.reason)"""
-        answer=answer[0].upper()+answer[1:]  if str(answer)[0].isalpha() else answer
-        self.currentMoveId = self.moveid;self.reason = reason
-        self.noOfRows2Move=0; self.needAnswer=True
-        if answer[0] == 'B' or answer[0] == 'F':
-            try:
-                if str(answer[1:]).isdigit():
-                    self.noOfRows2Move=int(answer[1:])                    
-            except:
-                rp(f"invalid input: {answer}")
-                self.needAnswer=False
-        else:
-            rp(f"invalid input: {answer}")
-            self.needAnswer=False
-        
-        if answer[0] == 'B' and self.needAnswer:
-            if self.currentMoveId - self.noOfRows2Move < 1:
-                self.currentMoveId =1
-            else:
-                self.currentMoveId -= self.noOfRows2Move 
-        elif answer[0] == 'F' and self.needAnswer:
-            if self.currentMoveId + self.noOfRows2Move >= self.maxmoveid:
-                self.needAnswer=False
-            else:
-                self.currentMoveId += self.noOfRows2Move 
-        running = True
-        if self.needAnswer:
-            running, tablow = self.getSpecificTablowDisplay(\
-            running, tablow,  self.currentMoveId)
-            #if not self.reason: self.reason=[]
-            self.gamePrintTableau(tablow, self.reason)
-        return running,self.needAnswer, tablow, self.reason
-    #running,self.moveing, tablow, self.reason
 
-    def convertTablo2SQL(self, tablow, gameid, moveid):
+    def convertTablo2SQL(self,  newtablowDC, gameid, moveid):
         snames=self.fieldNames4games;srowidx=self.row0Index
-        self.gameid=gameid   
-        self.moveid=moveid
+        self.gameid=newtablowDC.gameid
+        #self.gameid=gameid   
+        self.newGameFlag=newtablowDC.newGame
+        self.tablow=newtablowDC.tablow
+        self.moveid=newtablowDC.moveid
+        #self.moveid=moveid
         self.moveid+=1
         if self.newGameFlag:
             self.gameid += 1;self.moveid = 1;self.maxmoveid=1
         self.sep=', '# Create a new record
-        testtablow = [True if len(rol1) == 8 else False for rol1 in tablow]
+        testtablow = [True if len(rol1) == 8 else False for rol1 in self.tablow]
         if False in testtablow:
             self.closeconn()
             raise Exception()
         sqlb=[self.gameid,self.moveid]
-        for sqlridx,sqlrow in enumerate(tablow):
+        for sqlridx,sqlrow in enumerate(newtablowDC.tablow):
             sqlc=''
 
             """ DONT SKIP THE FIRST ROW IF ITS EMPTY (skip the rest of them)"""
-            if sqlridx ==0 or sqlrow != [BLANKCARD for _ in range(8)]:
+            if sqlridx ==0 or sqlrow != ['0' for _ in range(8)]:
                 for sqlcol in sqlrow:
                     sqlcol2=str(sqlcol)
-                    if sqlcol2 != '' and sqlcol2 !=BLANKCARD: 
+                    if sqlcol2 != '' and sqlcol2 !='0': 
                         sqlc+=sqlcol2
                     else:
                         sqlc+='xx'
@@ -302,7 +299,7 @@ class SQLiteIO(object):
         sqld = f"{self.valuestr} VALUES {self.SQLvalues}"
         self.allMoveSQLFwdBack.append(self.SQLvalues)          
         print(f'{sqld=}',sep=',')
-        return sqld, tablow
+        return sqld, self.tablow
     
 
     def deleteMostOfDbRowsAfterWin(self,gameid,norow2leave=3):
@@ -330,27 +327,54 @@ class SQLiteIO(object):
         #with closing(sql3class.cursorSQL3) as cursor3:
         #gamer=game()
         self.tablow=[]
-        qq=[BLANKCARD for zz in range(8)]
+        qq=EMPTYROW
         self.tablow.append(qq)
         running=True#self.lTblRows=sql3class.readlast record()
-        cardi=[]
+        cardj=[ 'xx8Cxxxx2C6D3H5S', 
+                '7HKSKDxxxxxx4CKH', 
+                '9HKCQCxx9Cxx4HQS', 
+                '3CxxJDxx8HxxJCJH', 
+                'QDxxTSxxxxxxxxTC', 
+                '7Sxxxxxxxxxxxx9D', 
+                '6Sxxxxxxxxxxxx8S', 
+                'QHxxxxxxxxxxxx7D', 
+                'JSxxxxxxxxxxxx6C', 
+                'TDxxxxxxxxxxxx5H', 
+                '9Sxxxxxxxxxxxxxx', 
+                '8Dxxxxxxxxxxxxxx', 
+                '7Cxxxxxxxxxxxxxx', 
+                '6Hxxxxxxxxxxxxxx', 
+                '5Cxxxxxxxxxxxxxx']
+        cardi=[]    
         if self.lTblRows !=None and len(self.lTblRows) < 2:
             self.gameid,self.moveid,self.lTblRows = self.readlastrecord()
-        #self.gameid+=1     #self.moveid+=1    #tablow = fromsql2tablo
+        #self.gameid+=1
+        #self.moveid+=1
+        #tablow = fromsql2tablo
         for listoflists in self.lTblRows:
             if len(listoflists) != 16: 
                 self.invalidTabloLen = True
                 self.closeconn()
                 raise Exception()#            else:
-            lof2char= [listoflists[i:i+2] for i in range(0, len(listoflists), 2)]
-            cardi.append(lof2char)
+
+            cardg='';cardh=[]
+            for idxchar,chara in enumerate(listoflists):
+                cardg+=chara
+                if idxchar%2!=0 and idxchar>0:
+                    #if cardg=='xx':
+                    #    cardg='0'
+                    cardh.append(cardg)
+                    cardg=''                        #else:
+            cardi.append(cardh)        
+    
         suit1=card.suit_list; rank1=card.rank_list
         tablow=[];self.rowx=-1;self.coly=-1
         for ir,xx in enumerate(cardi):
             ww=[];self.rowx += 1
             if self.rowx > 22: raise Exception(f"rowx Index[[{self.rowx}] out of range")
             for ic,yy in enumerate(xx):
-                self.coly += 1                        #if self.coly > 7: raise Exception(f"coly Index[[{self.coly}] out of range") 
+                self.coly += 1
+                #if self.coly > 7: raise Exception(f"coly Index[[{self.coly}] out of range") 
                 if yy == 'xx':
                     ww.append(yy)
                 else:
@@ -358,11 +382,11 @@ class SQLiteIO(object):
                     rule.posdic.update({yy:[ir,ic]})
             tablow.append(ww)
         while len(tablow)<23:
-            tablow.append([BLANKCARD for w in range(8)])
+            tablow.append(['0' for w in range(8)])
         for idxm,rown in enumerate(tablow):
             for idxn, itemn in enumerate(rown):
                 if str(itemn) == 'xx':
-                    tablow[idxm][idxn] = BLANKCARD    #Tableau.gamePrintTableau(tablow)
+                    tablow[idxm][idxn] = '0'    #Tableau.gamePrintTableau(tablow)
         
         return running, tablow
         
@@ -384,14 +408,59 @@ class SQLiteIO(object):
         self.sqlcreateslTblRows()
         running, tablow = self.convertSQL2Tablo()
         return running, tablow
-    
+
+    def  getSpecificRow(self, currentMoveId):   
+        self.currentMoveId = currentMoveId
+        sqll=f'SELECT * FROM Game WHERE gameid = {self.gameid} AND moveid = {self.currentMoveId};'
+        #try:
+        self.cursorSQL3.execute(sqll)#, ('john@example.com', 'mypassword'))
+        self.sqlcreateslTblRows()
+        #running, tablow = self.convertSQL2Tablo()
+        return self.gameid, self.moveid, self.lTblRows
+
+     
+    def handlebackfwd(self, answer):
+        """running,self.moveing, tablow, self.reason = bsqlt3.handlebackfwd(running,tablow, answer,self.reason)"""
+        answer=answer[0].upper()+answer[1:]  if str(answer)[0].isalpha() else answer
+        self.currentMoveId = self.moveid
+        self.noOfRows2Move=0; self.needAnswer=True
+        if answer[0] == 'B' or answer[0] == 'F':
+            try:
+                if str(answer[1:]).isdigit():
+                    self.noOfRows2Move=int(answer[1:])                    
+            except:
+                rp(f"invalid input: {answer}")
+                self.needAnswer=False
+        else:
+            rp(f"invalid input: {answer}")
+            self.needAnswer=False
         
-    def gamePrintTableau(self, tablow,reason,newGameFlag=False):
+        if answer[0] == 'B' and self.needAnswer:
+            if self.currentMoveId - self.noOfRows2Move < 1:
+                self.currentMoveId =1
+            else:
+                self.currentMoveId -= self.noOfRows2Move 
+        elif answer[0] == 'F' and self.needAnswer:
+            if self.currentMoveId + self.noOfRows2Move >= self.maxmoveid:
+                self.needAnswer=False
+            else:
+                self.currentMoveId += self.noOfRows2Move 
+        running = True
+        if self.needAnswer:
+            self.getSpecificRow(self.currentMoveId)
+            '''running, tablow = self.getSpecificTablowDisplay(\
+            running, tablow,  self.currentMoveId)
+            if not self.reason: self.reason=[]
+            self.gamePrintTableau(tablow, self.reason)'''
+        return self.gameid, self.moveid, self.lTblRows
+       
+        
+    def gamePrintTableau(self, newtablowDC,reason,newGameFlag=False):
         self.newGameFlag = newGameFlag
-        tablow,self.gameid,self.moveid = self.insertTablow(tablow,self.gameid,self.moveid)
+        newtablowDC.tablow,self.gameid,self.moveid = self.insertTablow(newtablowDC.tablow,self.gameid,self.moveid)
         if self.moveid == self.maxmoveid+1: 
             self.maxmoveid += 1
-        self.brichp1.printTableau(tablow,reason)                    
+        self.brichp1.printTableau(newtablowDC.tablow,newtablowDC.reason)                    
         self.newGameFlag=False
 
 

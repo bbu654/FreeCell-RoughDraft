@@ -1,13 +1,15 @@
-
+from dataclasses import dataclass
 import random
 
+@dataclass
 class Card( object ):
-    """ Model a playing card. """
-
-    # Rank is an int (1-13), where aces are 1 and kings are 13.
-    # Suit is an int (1-4), where clubs are 1 and spades are 4.
-    # Value is an int (1-10), where aces are 1 and face cards are 10.
-
+    ''' Model a playing card.\n 
+        Rank int: = (1-13), where aces = 1 \n
+        Suit int: = (1-4),  where club = 1 \n
+        Value int:= (1-10), where aces = 1 \n
+        Roww int: = (0-22), where fc,fd= 0 \n
+        Coll int: = (0-8),  where fd (4-8)
+        fc = FreeCell, fd = Foundation   '''
     # List to map int rank to printable character (index 0 used for no rank)
     rank_list = ['x','A','2','3','4','5','6','7','8','9','T','J','Q','K']
 
@@ -16,16 +18,18 @@ class Card( object ):
     #suit_list = ['x','\u2663','\u2666','\u2665','\u2660']
     suit_list = ['x','C','D','H','S']
     SUIT_LIST = {'x': 'x', 'C': '\u2663', 'D': '\u2666', 'H': '\u2665', 'S': '\u2660'}
-    def __init__( self, rank=0, suit=0, rowx=-2, coly=-2 ):
-        """ Initialize card to specified rank (1-13) and suit (1-4), \n
-                       Tableau position  rowx (0-22) and coly (0-8)."""
-        self.__rank = 0
-        self.__suit = 0
-        self.__face_up = None
 
-        self.__rowx = -1
-        self.__coly = -1
-        self.__foundation = None
+    #running: bool = True
+    __rank: int = 0
+    __suit: int = 0
+    __roww: int = -1
+    __colu: int = -1
+    __face_up: bool = True
+    __in_foundation: bool = False  
+    __cardstr:   str = str(rank_list[__rank]) + str(      suit_list[__suit])   #'xx'
+    __card_icon: str = str(rank_list[__rank]) + SUIT_LIST[suit_list[__suit]] #field()
+    
+    def __init__( self, rank, suit, roww = -1, colu = -1, in_foundation = False, face_up = True ):
         # Verify that rank and suit are ints and that they are within
         # range (1-13 and 1-4), then update instance variables if valid.
         if type(rank) == int and type(suit) == int:
@@ -33,10 +37,12 @@ class Card( object ):
                 self.__rank = rank
                 self.__suit = suit
                 self.__face_up = True
-        self.set_rowx( rowx )
-        self.set_coly( coly )
-        self.enter_foundation( )
-
+        if type(roww) == int and type(colu) == int:
+            if roww in range(23) and colu in range(8) and\
+               roww > -1 and colu > -1:
+                self.set_rowx( roww )
+                self.set_coly( colu )
+                self.enter_foundation( )        #self.printableCard()
     def rank( self ):
         """ Return card's rank (1-13). """
         return self.__rank
@@ -82,7 +88,11 @@ class Card( object ):
         """ Does card enter Foundation: then locked in"""
         if self.rowx() == 0 and self.coly() in range(4,8):
             self.__foundation = True
-
+ 
+    def printableCard( self ):
+        """ Returns icon of card. """
+        self.__card_icon=str(self.rank_list[self.__rank]) + self.SUIT_LIST[self.suit_list[self.__suit]] #field()
+        return self.__card_icon
     def get_position( self ):
         """ Returns a list of rowx, coly """
         return [ self.rowx(), self.coly() ]
@@ -103,10 +113,10 @@ class Card( object ):
         if self.__face_up:
             k=f"{self.rank_list[self.__rank]}"
             l=f"{self.suit_list[self.__suit]}"
-            return f"{self.rank_list[self.__rank]+self.suit_list[self.__suit]}"
+            self.__cardstr = f"{self.rank_list[self.__rank]+self.suit_list[self.__suit]}"
         else:
-            return f"{'XX'}"
-
+            self.__cardstr = f"{'XX'}"
+        return self.__cardstr
     def __repr__( self ):
         """ Convert card into a string for use in the shell. """
         return self.__str__()
@@ -168,7 +178,7 @@ class Deck( object ):
             if index%cols == 0:
                 print()
             isii=str(card)
-            print(f'{str(card)}',end=' ')
+            print(f'{card.printableCard()}',end=' ')
             #print(f"{str(card)} ", end="" )
         print()
         print()
@@ -185,7 +195,7 @@ class Deck( object ):
             for i,c in enumerate(decki):       
                 if i%8 == 0:
                     print()
-                print(f'{c}',sep='',end='')
+                print(f'{c}',sep=' ',end='')
             
             return self.__deck,decki
         if type(testdeck)==type(list()):           
@@ -221,3 +231,22 @@ class Deck( object ):
             print(decki)
             #print(f'{c.suit() for c in self.__deck}')
         return self.__deck,decki
+
+    '''class Rectangle:
+    def __init__(self, height, width):
+      self.height = height
+      self.width = width
+
+@dataclass
+class Square(Rectangle):
+    side: float
+
+    def __post_init__(self):
+        super().__init__(self.side, self.side)'''    
+     
+card=Card(1,1,1,1)
+print(f'{card}{card.printableCard()}')     
+dek=Deck()
+dek.shuffle()
+dek.display(8)    
+

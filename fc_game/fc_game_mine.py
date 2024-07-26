@@ -27,7 +27,8 @@ class Game(object):
                             '9D', '6S', 'TS', '9S', 'KD', 'QD', 'TD', '7D', 
                             '6H', 'JD', 'QS', '5C']
         pass
-
+    ''''SQLiteIO' object has no attribute 'maxmoveid' '''
+    '''cannot access local variable 'suitminp' where it is not associated with a value'''
     def runit(self,running,dek,tablow=None):
         if running:
             self.dek=dek
@@ -165,16 +166,17 @@ class Game(object):
 if __name__ == '__main__':
         running=True
         game=Game(running)#,restartCurrentGameFromScratch=True,beginANewGame = False)
-        running, dek, tablow = game.tablClass.handle_Re_Start(running)
+        running, dek, tablow = game.tablClass.handle_Re_Start(running, ' R|estartLastGameFromDB')
         #game.checkNewGameRestartFlags()
         while game.running:
             running, dek, tablow = game.runit(running, dek, tablow)
-            #if running:
-            #    game.checkNewGameRestartFlags()
+            #if running:            #    game.checkNewGameRestartFlags()
             game.running=running
-
-'''
-foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
+        """Need to update posdic everywhere"""
+        fgrewwsdgh='RESTART!    ' +'RESTART!    ' +'RESTART!    ' +'RESTART!' +'RESTART!' +'RESTART!' +'RESTART!' +'RESTART!' +'RESTART!' +'RESTART!' +'RESTART!' +'RESTART!'    
+        
+        """Need 2 add multi_Card_Move   Turn test to PROD"""
+'''foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
 foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
 foundation=7 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
 foundation=7 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
@@ -215,4 +217,4 @@ foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in l
 
 
 
-
+nonlocalsqlr="INSERT INTO Game  (gameid, moveid, row0, row1, row2, row3, row4, row5, row6, row7) VALUES (21, 1, 'xxxxxxxxxxxxxxxx', '4DAS5D6HKC8S7DQD', '7S3C6DKHAH2H4SKD', '3D2DAC9CQH5C9D8H', 'JSTC3H7CKSJCTD2S', '8DQS8C9HJD5SQC7H', 'TS6S3S2C4C5H9S6C', 'ADTHJH4Hxxxxxxxx');"
