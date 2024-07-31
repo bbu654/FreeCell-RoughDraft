@@ -72,7 +72,7 @@ def convertSQL2Tablo    (tabloDC):
 if __name__ == '__main__':
     #tabloDC = New_Tableau_dataclass()
     #ooo=pop(tabloDC)
-
+    
     convertSQL2Tablo(tabloDC)
     for ii,zz in enumerate(tabloDC.tablown):
         #if ii%8 == 0:

@@ -1,10 +1,13 @@
 from cards_msu_cse import Card, Deck
+from rich          import print as rp
+from fc_cons_New1  import *
+from copy          import deepcopy as dpcopy
 
 
 
 class Rules(object):
 
-
+    ''' 
     output={}#nextCards not any more
     for j in range(3,13+1):
         for k in range(2):
@@ -30,7 +33,7 @@ class Rules(object):
         for idx, vrank in enumerate(validrank[2:]):
             nextCard[vrank+vsuit]=[validrank[idx+1]+validsuit[vsuit][0],validrank[idx+1]+validsuit[vsuit][1]]
     ACES_TWOS = ('AC','2C','AS','2S','AH','2H','AD','2D')
-    '''
+   
     
     
     
@@ -44,33 +47,97 @@ class Rules(object):
         self.initPositionDict()
 
     def initPositionDict(self):
-        self.posdic={k:[-1,-1] for k in self.validcard}        
+        self.posdic={k:[-1,-1] for k in validcard}        
 
     def getValidAnswer(self, answer):
-        self.validAnswer = True; lenAnswer = len(answer);reason=''
+        self.validAnswer = True; lenAnswer = len(answer);self.reason=''
+        if lenAnswer > 0:    
+            answer = ''.join(answer[i].upper() if str(answer[i]).isalpha() else answer[i] for i in range(lenAnswer) )
         if lenAnswer < 1 or lenAnswer > 4:
             self.validAnswer = False
-            reason +=(f"{answer} 2 long/short")
+            self.reason +=(f"{answer} 2 long/short")
         elif lenAnswer == 1:
             answer = str(answer).upper()  if str(answer).isalpha() else answer
             if answer not in ['N','R','W','Q']:
                 self.validAnswer = False
-                reason +=(f"{answer} Wrong Answer")
+                self.reason +=(f"{answer} !in NRWQ")
+        elif lenAnswer > 1 or lenAnswer < 4:
+            if answer[0] not in ['B', 'F']:
+                self.validAnswer = False
+                self.reason +=(f"{answer} ! B/F")
+        elif lenAnswer in range(4,6):
+            if answer[:2] not in validcard:
+                self.validAnswer = False
+                self.reason +=(f"{answer} 1st2 ! Card")
+            elif answer[-1] not in ['F', 'G', 'Z'] or \
+                 answer[-2:] not in validcard:# or last2     \
+                 #self.noFoundationAsMover(Tableau.tablown,answer[-2:]):
+                 self.validAnswer = False
+                 self.reason +=(f"{answer} 1st2 ! Card")
+
         return self.validAnswer, answer, self.reason
+
+    '''
+    
+        s1 = 'Geeksforgeeks'
+        s2 = 'ksforgeeks'
+        s3 = 'forgeeks'
+        s4 = 'geeks'
+          
+        print(f'{s1 : >13}') 
+        print(f'{s2 : >13}') 
+        print(f'{s3 : >13}') 
+        print(f'{s4 : >13}') 
+        
+        Output :
+        
+        Geeksforgeeks
+           ksforgeeks
+             forgeeks
+                geeks
+        
+    def getFGZ_Dest(self, minp, dinp):
+        doapt=[0,0]; self.moveing = False
+        if dinp[1] == "F":
+            FFnumOf0InFC, first0InFC = Tableau.findNoOf0FC()
+            if first0InFC > -1:
+                doapt = [0,first0InFC]
+                self.moveing = True
+        elif dinp[1] == "G":
+            foundation =  vsuita.index(minp[1]) + 4     #-1 for the x in listsuit
+            if self.verbose and not self.winning:
+                rp(f'{foundation=} = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit')
+            moveCard   = validrank.index(minp[0])
+            if (moveCard == 0 and self.tablown[0][foundation]==BLANKCARD) or \
+                str(self.tablown[0][foundation])[0] == validrank[moveCard -1]:
+                doapt = [0, foundation]
+                self.moveing = True
+        elif dinp[1] == "Z":
+            self.copytavl = dpcopy(self.tablown[1:])
+            blankcolumns, first0Col = self.findNoOf0Cols(self.copytavl)
+            if first0Col > -1:
+                doapt = [1,first0Col]
+                self.moveing = True
+
+
+        return doapt
+        '''
+
+
     def noFoundationAsMover(self, tablow, minp):
         self.moveing = True
         #try:
         
-        if minp[1] in self.vsuita:
+        if minp[1] in vsuita:
         #if minp[1] in list(self.validsuit.keys):
-            suitminp = self.vsuita.index(minp[1]) + 4
-            if str(tablow[0][suitminp]) == self.BLANK:
+            suitminp = vsuita.index(minp[1]) + 4
+            if str(tablow[0][suitminp]) == BLANKCARD:
                 pass#
                 #strFoundation=str(tablow[0][suitminp])
                 #svr=self.validrank
             elif minp in str(tablow[0][suitminp]) or \
-                self.validrank.index(minp[0]) < self.validrank.index(str(tablow[0][suitminp])[0]): 
-                print(f'CANT MOVE{str(tablow[0][suitminp])} FROM FOUNDATION!!!!{self.validrank.index(minp[0])=} < {self.validrank.index(str(tablow[0][suitminp])[0])=}{str(tablow[0][suitminp])=}')    
+                validrank.index(minp[0]) < validrank.index(str(tablow[0][suitminp])[0]): 
+                print(f'CANT MOVE{str(tablow[0][suitminp])} FROM FOUNDATION!!!!{validrank.index(minp[0])=} < {validrank.index(str(tablow[0][suitminp])[0])=}{str(tablow[0][suitminp])=}')    
                 self.moveing = False
         else:
             self.moveing = False
@@ -97,7 +164,7 @@ class Rules(object):
                 disl     = f'{Rules.validNextCCCard.__name__}'
 
         try:
-            if minp not in self.validcard or dinp not in self.validcard:
+            if minp not in validcard or dinp not in validcard:
                 self.reason.append(f'{str(self.__qualname__)} Invalid Card(s):        {minp=}, {dinp=}: {self.validMove}')
                 self.validMove = False
         except:
@@ -106,7 +173,7 @@ class Rules(object):
             self.noAbend = True
 
         try:
-            if dinp in self.ACES_TWOS:    
+            if dinp in ACES_TWOS:    
                 self.reason.append(f'{str(__name__)} A and 2 cant be dest:    {dinp=} cant be {dinp[1]=}: {self.validMove}')
                 self.validMove = False
         except:
@@ -115,8 +182,8 @@ class Rules(object):
             self.noAbend = True
 
         try:
-            if dinp in list(self.nextCard):
-                if minp not in self.nextCard[dinp]:
+            if dinp in list(nextCard):
+                if minp not in nextCard[dinp]:
                     self.movnotdifcolr_1Lit = f'{str(__name__)} mover not diff color/-1  {dinp=} cant be {dinp[1]=}: {self.validMove}'
                     self.reason.append(self.movnotdifcolr_1Lit)
                     self.movnotdifcolr_1 =True
@@ -131,8 +198,9 @@ class Rules(object):
             self.movnotdifcolr_1 =True
 
         return self.reason
+
     def validLastRowsOfCards(self, tablow, rowidx, column):
-        self.reason=[];suitlist1=self.vsuita#list(Rules.validsuit.keys)
+        self.reason=[];suitlist1=vsuita#list(Rules.validsuit.keys)
         self.validMove = True
         self.validLastRowsOfCardsLit = [f'validLastRowsOfCards: put card into foundation?']
         self.reason.append(self.validLastRowsOfCardsLit)

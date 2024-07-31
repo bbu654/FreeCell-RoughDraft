@@ -6,6 +6,9 @@ from rich.console  import Console
 from rich.pretty   import pprint
 import sqlite3         as sql3
 import tableau_mine    as Tableau
+#from fc_io_New     import PrintItBBU
+#from fc_io_New     import SQLiteIO
+
 from fc_rules_mine import Rules as Rule
 from fc_cons_New1  import *
 rule=Rule()
@@ -69,7 +72,7 @@ class PrintItBBU(object):
     def printnextCard(self):
         rp('nextCard=')
         for idxc,key in enumerate(list(nextCard.keys())):
-            if idxc%10==0 and idxc<0:
+            if idxc%4==0 and idxc>0:
                 print()
             rp(f'{COLORS[key[1]]}{key}:{nextCard[key]}[/]',end=', ')
             '''if str(keys)[1] == 'C':
@@ -123,7 +126,7 @@ class PrintItBBU(object):
         self.printTableau(tablow)        
         return tablow
 
-    def getAnswer(self,question = f'card, dest|FF,GG,Q: '):
+    def getAnswer(self,question = f'{CENTERSPACES}card, dest|FF,GG,Q: '):
         answer = input(question)
         return answer
     
@@ -207,15 +210,23 @@ class SQLiteIO(object):
                 elif idxGamem>2:
                     self.lTblRows.append(mfield)
 
-    def insertTablow(self,tablow,gameid,moveid)  ->  Tableau:
+    def insertTablow(self,tablow,gameid,moveid,dontchgmoveid=False):
         """ self.fieldNames4games[:10]=['dbid', 'gameid', 'moveid', 
         'row0', 'row1', 'row2', 'row3', 'row4', 'row5', 
         'row6']||||self.row0Index=3"""
         #self.newGameFlag = newGameFlag
+        self.dontchgmoveid = dontchgmoveid
+        if        self.dontchgmoveid == True:
+            self.savedmoveid=moveid
+            moveid = self.tempmoveid
         sqld, tablow = self.convertTablo2SQL(tablow, gameid, moveid) 
         self.cursorSQL3.execute(sqld)#, ('john@example.com', 'mypassword'))
         #INSERT INTO 'game' ('gameid', 'moveid', 'subtitle`, `author`, `promocode`, `emaildate`, `picturename`, `description`, `promoline`, `forwardt`) VALUES
         # Commit changes
+        if        self.dontchgmoveid == True:
+            moveid = self.savedmoveid
+            self.dontchgmoveid = False
+
         if self.moveid % 5 == 0 or self.moveid == 1 or self.moveid == 2 or self.moveid == 3: #unfotunately i abend all the time while 
             self.conn.commit()
 
@@ -250,11 +261,11 @@ class SQLiteIO(object):
                 self.currentMoveId += self.noOfRows2Move 
         running = True
         if self.needAnswer:
-            running, tablow = self.getSpecificTablowDisplay(\
+            running, tablow, self.lTblRows = self.getSpecificTablowDisplay(\
             running, tablow,  self.currentMoveId)
             #if not self.reason: self.reason=[]
-            self.gamePrintTableau(tablow, self.reason)
-        return running,self.needAnswer, tablow, self.reason
+            #self.gamePrintTableau(tablow, self.reason)
+        return running,self.needAnswer, tablow, self.reason, self.lTblRows
     #running,self.moveing, tablow, self.reason
 
     def convertTablo2SQL(self, tablow, gameid, moveid):
@@ -280,7 +291,7 @@ class SQLiteIO(object):
                     if sqlcol2 != '' and sqlcol2 !=BLANKCARD: 
                         sqlc+=sqlcol2
                     else:
-                        sqlc+='xx'
+                        sqlc+='__'
                 sqlb.append(sqlc)
             else:
                 continue
@@ -322,7 +333,9 @@ class SQLiteIO(object):
         #lennodels=len(self.norowsdeleted)
         rp(f'{self.norowsdeleted[0]} Record(s) deleted successfully:')
         rp(f'{sqlf=}\n{sqlg=}') 
-        
+
+    #def convertSQL2Tablo(self):#update to tableau must be done in tableau_dataclass        
+    '''    
     def convertSQL2Tablo(self):
         #dek=deck();#deckA,deckB=dek.turnTestdeckIntoDeck(testdeck)
         suit1=card.suit_list; rank1=card.rank_list
@@ -365,6 +378,7 @@ class SQLiteIO(object):
                     tablow[idxm][idxn] = BLANKCARD    #Tableau.gamePrintTableau(tablow)
         
         return running, tablow
+        '''
         
 
     def readAllRowsOnRestart(self):
@@ -382,8 +396,8 @@ class SQLiteIO(object):
         #try:
         self.cursorSQL3.execute(sqll)#, ('john@example.com', 'mypassword'))
         self.sqlcreateslTblRows()
-        running, tablow = self.convertSQL2Tablo()
-        return running, tablow
+        #running, tablow = self.convertSQL2Tablo()
+        return running, tablow, self.lTblRows
     
         
     def gamePrintTableau(self, tablow,reason,newGameFlag=False):
@@ -393,6 +407,15 @@ class SQLiteIO(object):
             self.maxmoveid += 1
         self.brichp1.printTableau(tablow,reason)                    
         self.newGameFlag=False
+
+    def insertCurrentTablownAsMoveid2(self, tablow,tempmoveid=1):
+        self.newGameFlag   = False
+        self.dontchgmoveid = True
+        self.tempmoveid    = tempmoveid
+        self.rmpmid        = self.moveid
+        tablow, self.gameid, self.moveid = self.insertTablow(tablow,self.gameid,tempmoveid,self.dontchgmoveid)
+        self.moveid        = self.rmpmid
+
 
 
     def closeconn(self):

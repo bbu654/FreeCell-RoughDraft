@@ -1,12 +1,17 @@
+import copy
 import itertools
 import random
 from fc_card_New1   import Card as card
 from fc_card_New1   import Deck
-from fc_io_mine     import PrintItBBU
+from fc_io_New      import PrintItBBU
 from more_itertools import quantify
 from fc_cons_New1   import *
-brichp = PrintItBBU()
+from fc_tableau_New import New_Tableau_dataclass
+tabloDC= New_Tableau_dataclass()
+brichp = PrintItBBU(tabloDC)
 dek=Deck();dek.shuffle();dek.turnTestdeckIntoDeck()
+def goslow():
+    pass
 nminp='';minp='3d'
 nminp = ''.join(minp[i].upper() if str(minp[i]).isalpha() else minp[i] for i in range(2) )
 print(nminp)
@@ -22,8 +27,8 @@ nextCard = {}
 for vsuit in validsuit:
     for idx, vrank in enumerate(validrank[2:]):
         nextCard[vrank+vsuit]=[validrank[idx+1]+validsuit[vsuit][0],validrank[idx+1]+validsuit[vsuit][1]]
-        print(f'{vrank+vsuit}: {nextCard[vrank+vsuit]}',sep='',end=' ')
-    print()  
+#        print(f'{vrank+vsuit}: {nextCard[vrank+vsuit]}',sep='',end=' ')
+#    print()  
 nextcrds = {}
 for idxr, vr1 in enumerate(validrank[2:]):
     for vsz in validsuit:
@@ -106,7 +111,9 @@ for ww in listofstr:
     if len(ww) == 16:
         cd=[]
         for xr in range(0,16,2):
-            #if ww[xr:xr+2] == 'xx':
+            #if str(ww[xr:xr+2]).upper() == 'XX':
+            #    cd.append('__')
+            #else:
             cd.append(card(ww[xr:xr+2][0],ww[xr:xr+2][1]))
         tablow1.append(cd)
         print(cd)
@@ -118,7 +125,7 @@ if run:
     for xx in tablow1:
         ww=[]
         for yy in xx:
-            if yy == 'xx':
+            if str(yy).upper() == 'XX':
                 ww.append('__') 
             else:
                 ww.append(card(rank1.index(yy[0]),suit1.index(yy[1])))
@@ -127,7 +134,7 @@ if run:
         tablow.append(['__' for w in range(8)])
     for idxm,rown in enumerate(tablow):
         for idxn, itemn in enumerate(rown):
-            if str(itemn) == 'xx':
+            if str(itemn) == 'xx' or str(itemn) == 'XX':
                 tablow[idxm][idxn] = '__'    #Tableau.gamePrintTableau(tablow)
     
     #print(f'tablow=\n{[tablow[vv] for vv in range(len(tablow))]}\ntablow=\n{tablow}',sep='\n')
@@ -136,4 +143,6 @@ print('\ntablow=')
 for rr in range(len(tablow1)):
     if tablow1[rr] != ['__' for w in range(8)] or rr == 0:
         print(tablow1[rr])
-brichp.printTableau(tablow1)
+tabloDC.tablown= copy.deepcopy(tablow1)
+brichp.printConst()
+brichp.printTableau(tabloDC)

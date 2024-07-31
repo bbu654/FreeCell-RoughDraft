@@ -8,46 +8,8 @@ import sqlite3         as sql3
 import tableau_mine    as Tableau
 import copy
 from fc_rules_mine import Rules as Rule
-
+from fc_cons_New1  import *
 rule=Rule()
-BLANK_CARD='__'
-EMPTYROW=[BLANK_CARD for _ in range(8)]
-suitlit = ['[white]__[/]']
-SYMBOL={'C':'♣','D':'♦','H':'♥','S':'♠'}
-COLORS={'C':'[blue]','D':'[bright_magenta]','H':'[red]','S':'[dark_green]'}
-#suitlitN= ['[white]0[/]']
-for bt in SYMBOL:
-    for bu in card.rank_list[1:]:
-        suitlit.append(f'{COLORS[bt]}{bu}{SYMBOL[bt]}[/]')    
-'''for at in SYMBOL:
-    for au in range(1,14):
-        if au == 1:
-            suitlit.append(f'{COLORS[at]}A{SYMBOL[at]}[/]')    
-        elif au == 10:
-            suitlit.append(f'{COLORS[at]}T{SYMBOL[at]}[/]')
-        elif au == 11:
-            suitlit.append(f'{COLORS[at]}J{SYMBOL[at]}[/]')
-        elif au == 12:
-            suitlit.append(f'{COLORS[at]}Q{SYMBOL[at]}[/]')
-        elif au == 13:
-            suitlit.append(f'{COLORS[at]}K{SYMBOL[at]}[/]')
-        else:
-            suitlit.append(f'{COLORS[at]}{str(au)}{SYMBOL[at]}[/]')'''
-  
-output={}#nextCards
-for j in range(3,13+1):
-    for k in range(2):
-        output[j+(13*k)] = [j+(13*2)-1, j+(13*3)-1]
-        output[j+(13*(k+2))] = [j-1, j+12]
-        
-j=0
-k=0
-validsuit={'C':['D','H'], 'D':['C','S'], 'H':['C','S'], 'S':['D','H'] }
-nextCard = {}
-for vsuit in validsuit:
-    for idx, vrank in enumerate(card.rank_list[3:]):
-        nextCard[vrank+vsuit]=[card.rank_list[idx+2]+validsuit[vsuit][0],card.rank_list[idx+2]+validsuit[vsuit][1]]
-
 
 class PrintItBBU(object):
     def __init__(self, newtablowDC) -> None:
@@ -91,16 +53,16 @@ class PrintItBBU(object):
             tabloDC.posdic  = copy.deepcopy(self.posdic)
             tabloDC.tablow  = copy.deepcopy(self.tablown)
     # rp    (f'{nextCard}',sep=' ',end='')rp(f'{nextCard}',sep=' ',end='')
-    def printTableau(self,tableauNew=None):
-        if tableauNew != None:
+    def printTableau(self, tabloDC=None):
+        if tabloDC != None:
             gameview = Table(title='New Freecell')
             cc=['','','','','','','','']
-            for idy,row1    in enumerate(tableauNew.tablown):
+            for idy,row1    in enumerate(tabloDC.tablown):
                 strRow=['','','','','','','',''] #str4=zip(row1)        #str5=str4        str0=''
                 for idx,col1 in enumerate(row1):
                     col2=str(col1)
-                    if col2 == BLANK_CARD or col2=='' or col2=='0' or col2=='_' or col2=='XX' or col2=='xx':
-                        stra=f'[white]{BLANK_CARD}[/]'                
+                    if col2 == BLANKCARD or col2=='' or col2=='0' or col2=='_' or col2=='XX' or col2=='xx':
+                        stra=f'[white]{BLANKCARD}[/]'                
                     else:
                         stra=f'{COLORS[col2[1]]}{col2[0]}{SYMBOL[col2[1]]}[/]'
                     if idy==0:#strx=str(col1)    if col1 == '0':    tview.add_column(f'[white]0[/]')    else:    tview.add_column(f'{COLORS[col1[1]]}{col1[0]}{SYMBOL[col1[1]]}[/]')                    # tview.add_column(suitlit1[idx])
@@ -113,9 +75,9 @@ class PrintItBBU(object):
             consol=Console()    
             consol.print(gameview,justify='center')
         #return tablow
-            if tableauNew.reasonx != None:
-                if len(tableauNew.reasonx) > 1:
-                    rp(f'{[ti for ti in tableauNew.reasonx[1:]]}',sep='   ')
+            if tabloDC.reasonx != None:
+                if len(tabloDC.reasonx) > 1:
+                    rp(f'{[ti for ti in tabloDC.reasonx[1:]]}',sep='   ')
 
     def printSQLRow(self, sqlrow):
         for rowa in sqlrow[3:]:
@@ -136,11 +98,12 @@ class PrintItBBU(object):
     def printnextCard(self):
         rp('nextCard=')
         for idxc,key in enumerate(list(nextCard.keys())):
-            if idxc%10==0 and idxc<0:
+            if idxc%4==0 and idxc>0:
                 print()
-            rp(f'{COLORS[key[1]]}{key}:{nextCard[key]}[/]',end=', ')
+            val0,val1=nextCard[key]
+            rp(f'{COLORS[key[1]]}{key}:[/][{COLORS[val0[1]]}{val0}[/],{COLORS[val1[1]]}{val1}[/]]',end=', ')
 
-    def getAnswer(self,question = f'card, dest|FF,GG,Q: '):
+    def getAnswer(self,question = f'{CENTERSPACES}card, dest|FF,GG,Q: '):
         validAnswer=False; reason=[]
         while not validAnswer:
             if reason !=[]:

@@ -119,7 +119,7 @@ class Card( object ):
             l=f"{suit_list[self.__suit]}"
             self.__cardstr = f"{rank_list[self.__rank]+suit_list[self.__suit]}"
         else:
-            self.__cardstr = f"{'XX'}"
+            self.__cardstr = f"{'__'}"
         return self.__cardstr
     def __repr__( self ):
         """ Convert card into a string for use in the shell. """
@@ -135,10 +135,10 @@ class Card( object ):
         oldminp=minp
         self.minp=minp
         newminp=minp
-        temprank=Card.rank_list.index(minp[0])
-        tempsuit=Card.suit_list.index(minp[1])
+        temprank=rank_list.index(minp[0])
+        tempsuit=suit_list.index(minp[1])
         print(f'{oldminp=}{newminp=}{minp=}{temprank=}{tempsuit=}')
-        return Card(Card.rank_list.index(minp[0],Card.suit_list.index(minp[1])))
+        return Card(rank_list.index(minp[0]),suit_list.index(minp[1]))
         #pass
 class Deck( object ):
     """ Model a deck of 52 playing cards. """
@@ -232,7 +232,7 @@ class Deck( object ):
             print();print()
             decki=[]
             for c in self.__deck:
-                decki.append(f'{c.rank_list[c.rank()]}{c.suit_list[c.suit()]}')
+                decki.append(f'{rank_list[c.rank()]}{suit_list[c.suit()]}')
             print(decki)
             #print(f'{c.suit() for c in self.__deck}')
         return self.__deck,decki

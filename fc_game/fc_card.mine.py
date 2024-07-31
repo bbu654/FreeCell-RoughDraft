@@ -12,8 +12,6 @@ class Card( object ):
         fc = FreeCell, fd = Foundation   '''
     # List to map int rank to printable character (index 0 used for no rank)
     rank_list = ['x','A','2','3','4','5','6','7','8','9','T','J','Q','K']
-    # List to map int rank to printable character (index 0 used for no rank)
-    rank_list = ['x','A','2','3','4','5','6','7','8','9','T','J','Q','K']
 
     # List to map int suit to printable character (index 0 used for no suit)
     # 1 is clubs, 2 is diamonds, 3 is hearts, and 4 is spades
@@ -135,7 +133,7 @@ class Card( object ):
         temprank=Card.rank_list.index(minp[0])
         tempsuit=Card.suit_list.index(minp[1])
         print(f'{oldminp=}{newminp=}{minp=}{temprank=}{tempsuit=}')
-        return Card(Card.rank_list.index(minp[0],Card.suit_list.index(minp[1])))
+        return Card(Card.rank_list.index(minp[0]), Card.suit_list.index(minp[1]))
         #pass
 class Deck( object ):
     """ Model a deck of 52 playing cards. """

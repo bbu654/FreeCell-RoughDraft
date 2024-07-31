@@ -1,0 +1,1722 @@
+diff --git a/LearningPy/LearningPy.py b/LearningPy/LearningPy.py
+index c50ff82..a09b9e7 100644
+--- a/LearningPy/LearningPy.py
++++ b/LearningPy/LearningPy.py
+@@ -60,7 +60,7 @@ shorty.append(whiley.userange(4,6))
+ if __name__ == '__main__':
+     a = [1, 5, 2, 1, 9, 1, 5, 10]
+     shorty.append(F'a={a};;;    ')
+-    shorty.append(f'list(dedupe(a)={list(bb.dedupe(a))}{bb.DeepDiveOnCollections}')
++    shorty.append(f'list(dedupe(a)={list(bb.dedupe(a))}')#{bb.DeepDiveOnCollections}')
+ collection_list = []
+ print(collection_list,end='    ')
+ list123 = [1,2,3,4,5]
+@@ -178,14 +178,38 @@ for yearindex, yearobj in enumerate(bb.listyearsum2020):
+ adventofcode1stday="Advent of Code *bbu654 9*  :year 2020  That's the right answer! You are one gold star closer to saving your vacation. You have completed Day 1 thru 5.1!" 
+ print(f'adventofcode1stday={adventofcode1stday}') #Too Low=935
+ pobbu = bb.day3AdventOfCode(1) * 44996864#bb.day3AdventOfCode(3) * bb.day3AdventOfCode(5) * bb.day3AdventOfCode(7)
+-shorty.append(f'day2AdventOfCode={bb.day2AdventOfCode()}')
+-shorty.append(f'day3={pobbu}, day4={bb.day4passports()}')
+-shorty.append(f'day5={bb.day5SeatNumbers()[0]}')
+-shorty.append(f'day6={bb.day6answers()}')
+-shorty.append(f'day7={bb.day7bags()}')
++#shorty.append(f'day2AdventOfCode={bb.day2AdventOfCode()}')
++#shorty.append(f'day3={pobbu}, day4={bb.day4passports()}')
++#shorty.append(f'day5={bb.day5SeatNumbers()[0]}')
++#shorty.append(f'day6={bb.day6answers()}')
++#shorty.append(f'day7={bb.day7bags()}')
++nopcount=0
++jmpcount=-1
++Limit=2000
++popaccum=Limit+1
++while   popaccum > Limit:
++    popaccum=bb.day8infloopacc(nopcount,jmpcount,Limit) 
++    nopcount+=1
++    if nopcount > 61 : break
++else:
++    shorty.append(f'day8={popaccum}')
++if popaccum < Limit:    shorty.append(f'day8={popaccum}')
++nopcount=-1
++jmpcount=0
++while   popaccum > Limit:
++    popaccum=bb.day8infloopacc(nopcount,jmpcount,Limit) 
++    jmpcount+=1
++    if jmpcount > 226: break
++else:
++    shorty.append(f'day8={popaccum}')
++if popaccum < Limit:    shorty.append(f'day8={popaccum}')
++shorty.append(f"'day2AdventOfCode=342', 'day3=1574890240, day4=131', 'day5=6', 'day6=3117', 'day7=(595, 4, 1515, 239)',")
++shorty.append(f'day 9=(586, 466456641, 55732936)')#'day 9={bb.day9xmascipher()}')
++shorty.append(f'day10youhoo!={bb.day10Joltages()}')   
++shorty.append(f'day11seatchart={bb.day11seatchart()}') 
+ if False:
+     bb.day3rdlineAdventOfCode()
+-#123456789
++#123456789 #226
+ pp2.pprint(shorty) 
+     #pp2.pprint(bb.day5SeatNumbers().left)
+ if False:
+diff --git a/LearningPy/PythonCookBook/JNB.py b/LearningPy/PythonCookBook/JNB.py
+index 7be3d4d..67e3880 100644
+--- a/LearningPy/PythonCookBook/JNB.py
++++ b/LearningPy/PythonCookBook/JNB.py
+@@ -27,3 +27,7 @@ collection_list.extend(listalpha)
+ collection_list.extend(list123)
+ print(collection_list)
+ # %%
++rows, cols = (5, 5) 
++arr = [[i for i in range(cols)] for j in range(rows)] 
++print(arr) 
++# %%
+diff --git a/LearningPy/bbutils.py b/LearningPy/bbutils.py
+index e8caf43..4e8bfe2 100644
+--- a/LearningPy/bbutils.py
++++ b/LearningPy/bbutils.py
+@@ -3,8 +3,9 @@ import pkgutil
+ import random
+ import logging                          #from thread_safe_print import thread_safe_print
+ import threading
+-from collections import defaultdict, namedtuple
++from collections import defaultdict, namedtuple, deque
+ import binarytree
++import debugpy
+ import prettyprint
+ import itertools
+ def printit():
+@@ -472,125 +473,434 @@ def dedupe(items):
+     #    print(f'list(dedupe(a)={list(dedupe(a))}')
+ listyearsum2020=[1567,1223,1758,1842,1933,1898,1409,1058,1533,1417,1032,1634,1477,1394,1888,1972,1237,1390,1677,1546,1302,1070,1369,1455,1065,1924,1593,1131,1064,1346,1914,1129,1830,1450,1278,1740,1809,1176,1734,1102,1807,1982,1603,1736,2008,1980,1905,1633,1732,1350,1865,1988,1805,1998,1152,1046,1870,1557,1789,1766,1945,1359,1002,1126,1719,1497,1296,1560,1936,1929,1464,2005,1281,618,1257,1107,1632,1688,1964,1803,1360,1384,1889,1411,1328,1452,1868,1515,1586,1631,1618,1087,1710,1094,1774,1295,1700,1636,1230,1421,1910,1522,1366,1144,1757,1493,1316,1103,687,1371,1720,1155,1559,1900,989,1367,1999,1066,1773,1787,1402,1047,1806,1956,1219,1555,1307,1419,1706,1884,1109,1181,2010,1298,1730,1078,1848,1398,1687,2007,1550,1664,1225,1079,1698,350,1222,1377,1977,1510,1571,1630,1029,1379,1942,1949,1249,1829,1297,1530,1607,1324,1069,1476,928,1039,1855,1644,1454,1310,1172,547,1034,1878,1479,1457,1319,1810,1759,1439,1851,545,1470,2003,1908,1564,1491,1174,1301,1689,1276,1781,1392,1499,1962,1653,1823,1381,1827,1974]
+ DeepDiveOnCollections= """
+-        In this tutorial we will explore and master the most common and important data structures 
+-        in Python by performing a variety of operations with them. 
+-        A Collection is a container variable that is used to store some number of objects, 
+-        where objects can be of the same type or different.
+-        List
+-        List is an ordered set of elements that can be of different types. 
+-        Lists are defined using square brackets or using the list literal. 
+-        You can also create a list of identical values ​​using multiplication.
+-        As said above, lists can contain variables of different type. 
+-        However, lists usually are used to store variables of same time to imitate behavior of arrays.
+-        
+-        To get the length of list, use the len() function. In Python, 
+-        you do not need to explicitly specify the size of a list while
+-        creating. Length is calculated in constant time.
+-        To access a specific list item or assign value to it, 
+-        we refer to the element by index where first element 
+-        has index of 0. To access an item from back, 
+-        use negative index [-1]:
+-        Accessing a nonexistent index results in an error:
+-        Error Index: list index out of range !
+-        Using the in operator, we can check if an object exists 
+-        in the list. 
+-        Result of operation returns a bool value:
+-        You can also use slices to access a particular range of 
+-        values of given list:
+-        It is important to note that when using a slice, 
+-        a new list gets created:
+-        number_list[:] is number_list = false
+-        We can iterate over list items using the for loop. Often it is 
+-        necessary to get the index of the current element during 
+-        iteration. To do this, you can use the enumerate function, 
+-                which returns the index and the current element:
+-        As lists are a mutable data structures, we can add and remove 
+-        items. To add item to list, use .append() method:
+-        If you need to expand the list with another list, 
+-        you can use the .extend() method, which adds the 
+-        transferred list to the end of your list:
+-        
+-        You can use the del keyword to remove an item from the list:
+-        To find the minimum and maximum or calculate the sum of 
+-        all elements, we can use the built-in functions min, max, sum:
+-        It is often required to convert the list to a string, 
+-        for this you can use the str.join() method:
+-        Often we need to sort the list. There are two ways to sort 
+-        a list in Python.
+-        sorted()- the standard function, which returns the 
+-        new list obtained by sorting the original:
+-        .sort ()- the list method, which sorts list itself. 
+-        For sorting, the Timsort algorithm is used. O(n log n) 
+-        for worst case:
+-        If we need to sort in reverse order, pass reverse=True as argument:
+-        Dictionary
+-        Dictionary allows you to store data in key-value format. 
+-        Use the curly braces literal or just call dict() to define 
+-        a dictionary. If we want to add data to dictionary while 
+-        defining it, we write the key-value through a colon.
+-        Access to the value by key is carried out for constant time 
+-        and it does not depend on the size of the dictionary.
+-        If you access element by key that does not exist, 
+-        Python will throw a KeyError error, but it is often useful to try 
+-        to get the value from the dictionary, and if there is no key, 
+-        return some standard value. For such purposes we can use 
+-        a built-in get() method.
+-        Using the in operator, we can check if an object exists in the dictionary. 
+-        Result of operation returns a bool value:
+-        As dictionary is a mutable data structure, we can add and remove elements from it. 
+-        We can add item to dictionary simply using key access. 
+-        To remove the key and value from the dictionary, you can use the 
+-        del keyword as with lists:
+-        We can also add some key-value to the dictionary using can 
+-        the built-in update() method, which takes another dictionary 
+-        and extends our dictionary and also updates values of the original 
+-        dictionary in the case of identical keys.
+-        To remove the key-value from the dictionary and return the value 
+-        at the same time, we use the pop method:
+-        Sometimes it is required to check if a key exists in the dictionary, 
+-        and in case of failure add this new key-value pair. 
+-        For such situations we use setdefault() method:
+-        Using a for loop, we can iterate over dictionary keys:
+-        To iterate not by keys, but by keys and values ​​at once, 
+-        we can use the method items():
+-        The values() ​​method, which returns the values ​​logically:
+-        Set
+-        Set is an unordered collection of unique objects. 
+-        Sets are mutable and are most often used to remove duplicates 
+-        and all kinds of entry checks.
+-        You can use the set literal to declare an empty set or use curly braces 
+-        to declare the set and add some elements there at the time of declaration:
+-        To check whether an object is contained in a set, we use in keyword. 
+-        The check is performed in constant time. Each element of the structure 
+-        is hashed by analogy with dictionaries. Based on the key received 
+-        from the hash function, the object is searched.
+-        To add an element to the set we use the add() method. 
+-        The remove() method is used to remove a specific element:
+-        Sets in Python support standard set operations — such as union, 
+-        difference, intersection, and symmetric difference.
+-        NOTE: all mentioned collections and their methods, 
+-        functions are ones that are mostly used in practice. 
+-        There are more of them.
+-        Wrapping Up
+-        Want to learn more? Refer to this link:
+-        The Python Standard Library - Python 3.8.2 documentation
+-        While The Python Language Reference describes the exact syntax 
+-        and semantics of the Python language, this library…
+-        docs.python.org
+-        Kamoliddin Nabijonov
++    In this tutorial we will explore and master the most common and important data structures in Python 
++    by performing a variety of operations with them. 
++    A Collection is a container variable that is used to store some number of objects, 
++    where objects can be of the same type or different.
++    List
++    List is an ordered set of elements that can be of different types. x=[] or list(x)
++    You can also create a list of identical values ​​using multiplication.
++    As said above, lists can contain variables of different type. 
++    However, lists usually are used to store variables of same time to imitate behavior of arrays.
++    To get the length of list, use the len() function. In Python, 
++    you do not need to explicitly specify the size of a list while creating.
++    Length is calculated in constant time.
++    To access a specific list item or assign value to it, 
++    we refer to the element by index where first element 
++    has index of 0. To access an item from back, 
++    use negative index [-1]:
++    Accessing a nonexistent index results in an error:
++    Error Index: list index out of range !
++    Using the in operator, we can check if an object exists in the list. 
++    Result of operation returns a bool value:
++    You can also use slices to access a particular range of 
++    values of given list:
++    It is important to note that when using a slice, 
++    a new list gets created:
++    number_list[:] is number_list = false
++    We can iterate over list items using the for loop. Often it is 
++    necessary to get the index of the current element during 
++    iteration. To do this, you can use the enumerate function, 
++            which returns the index and the current element:
++    As lists are a mutable data structures, we can add and remove 
++    items. To add item to list, use .append() method:
++    If you need to expand the list with another list, 
++    you can use the .extend() method, which adds the 
++    transferred list to the end of your list:
++    
++    You can use the del keyword to remove an item from the list:
++    To find the minimum and maximum or calculate the sum of 
++    all elements, we can use the built-in functions min, max, sum:
++    It is often required to convert the list to a string, 
++    for this you can use the str.join() method:
++    Often we need to sort the list. There are two ways to sort 
++    a list in Python.
++    sorted()- the standard function, which returns the 
++    new list obtained by sorting the original:
++    .sort ()- the list method, which sorts list itself. 
++    For sorting, the Timsort algorithm is used. O(n log n) 
++    for worst case:
++    If we need to sort in reverse order, pass reverse=True as argument:
++    Dictionary
++    Dictionary allows you to store data in key-value format. 
++    Use the curly braces literal or just call dict() to define 
++    a dictionary. If we want to add data to dictionary while 
++    defining it, we write the key-value through a colon.
++    Access to the value by key is carried out for constant time 
++    and it does not depend on the size of the dictionary.
++    If you access element by key that does not exist, 
++    Python will throw a KeyError error, but it is often useful to try 
++    to get the value from the dictionary, and if there is no key, 
++    return some standard value. For such purposes we can use 
++    a built-in get() method.
++    Using the in operator, we can check if an object exists in the dictionary. 
++    Result of operation returns a bool value:
++    As dictionary is a mutable data structure, we can add and remove elements from it. 
++    We can add item to dictionary simply using key access. 
++    To remove the key and value from the dictionary, you can use the 
++    del keyword as with lists:
++    We can also add some key-value to the dictionary using can 
++    the built-in update() method, which takes another dictionary 
++    and extends our dictionary and also updates values of the original 
++    dictionary in the case of identical keys.
++    To remove the key-value from the dictionary and return the value 
++    at the same time, we use the pop method:
++    Sometimes it is required to check if a key exists in the dictionary, 
++    and in case of failure add this new key-value pair. 
++    For such situations we use setdefault() method:
++    Using a for loop, we can iterate over dictionary keys:
++    To iterate not by keys, but by keys and values ​​at once, 
++    we can use the method items():
++    The values() ​​method, which returns the values ​​logically:
++    Set
++    Set is an unordered collection of unique objects. 
++    Sets are mutable and are most often used to remove duplicates 
++    and all kinds of entry checks.
++    You can use the set literal to declare an empty set or use curly braces 
++    to declare the set and add some elements there at the time of declaration:
++    To check whether an object is contained in a set, we use in keyword. 
++    The check is performed in constant time. Each element of the structure 
++    is hashed by analogy with dictionaries. Based on the key received 
++    from the hash function, the object is searched.
++    To add an element to the set we use the add() method. 
++    The remove() method is used to remove a specific element:
++    Sets in Python support standard set operations — such as union, 
++    difference, intersection, and symmetric difference.
++    NOTE: all mentioned collections and their methods, 
++    functions are ones that are mostly used in practice. 
++    There are more of them.
++    Wrapping Up
++    Want to learn more? Refer to this link:
++    The Python Standard Library - Python 3.8.2 documentation
++    While The Python Language Reference describes the exact syntax 
++    and semantics of the Python language, this library…
++    docs.python.org
++    Kamoliddin Nabijonov
+             """
+            # print(f'DeepDiveOnCollections={DeepDiveOnCollections}')
+         #output:
+ #a=[1, 5, 2, 1, 9, 1, 5, 10]
+ #list(dedupe(a)=[1, 5, 2, 9, 10]
++def neighbours(ferry, row, col):
++    occupied_seats = 0
++    for i in range(max(row - 1, 0), min(len(ferry), row + 2)):
++        for j in range(max(col - 1, 0), min(len(ferry[0]), col + 2)):
++            if (i != row or j != col) and ferry[i][j] == '#':
++                occupied_seats += 1
++    return occupied_seats
++
++def next_generation(ferry):
++    next_ferry = []
++    rows = len(ferry)
++    cols = len(ferry[0])
++    
++    for row in range(rows):
++        next_row = []
++        for col in range(cols):
++            if ferry[row][col] == '.':
++                next_row.append('.')
++            elif ferry[row][col] == 'L':
++                next_row.append('#' if neighbours(ferry, row, col) == 0 else 'L')
++            elif ferry[row][col] == '#':
++                next_row.append('#' if neighbours(ferry, row, col) < 4 else 'L')
++        next_ferry.append(''.join(next_row))
++    return next_ferry
++def day11seatchart():
++    path = f'day11seatchart.txt'
++    ferry=[]          #    tlines=[]
++    rules = """All decisions are based on the number of occupied seats 
++        adjacent to a given seat (one of the eight positions 
++        immediately up, down, left, right, or diagonal from the seat). 
++        The following rules are applied to every seat simultaneously:
++        If a seat is empty (L) and there are no occupied seats adjacent 
++        to it, the seat becomes occupied.  If a seat is occupied (#) 
++        and four or more seats adjacent to it are also occupied, 
++        the seat becomes empty.  Otherwise, the seat's state does not 
++        change.  Floor (.) never changes; seats don't move, and nobody sits on the floor. """
++
++    with open(path, 'r') as file11:
++        line = file11.read()
++            #for line in lines:
++        lines=str(line)
++        ferry=lines.strip().split('\n')        
++            #    ferry = input.strip().split('\n')
++    print(f'{ferry[0]}{ferry[1]}')
++    iteration = 0
++    print(f'{rules}')
++    while True:
++        next_ferry = next_generation(ferry)
++        tpass=sum(row.count('#') for row in ferry)
++        if ferry == next_ferry:
++            return tpass
++        ferry = next_ferry
++        print(f'iteration={iteration},total passengers={tpass}')
++        iteration += 1
++        if iteration > 200:
++            break
++def fillseats(lines):
++    mline=[]
++    tlines=[]
++    zero0=0
++    intline=[]
++    
++    rows, cols = (99, 97) 
++    intlines = [[0 for i in range(cols)] for j in range(rows)] 
++    #print(arr) 
++    #for init1 in range(99):
++    #    for init2 in range(97):
++    #        intlines[init1,init2]=0
++    count=0
++    for irow,line in enumerate(lines):
++        kline=str(line)
++        for icol in range(cols):
++            if icol>0 and irow>0 and icol<cols and irow <rows:
++                for x in range(-1,2):
++                    for y in range(-1,2):
++                        if lines[irow+x][icol+x] == '#':
++                            bagtotal+=1
++                        if lines[irow+x][icol+y] == '#':
++                            bagtotal+=1
++                        if lines[irow+y][icol+x] == '#':
++                            bagtotal+=1
++                        if lines[irow+y][icol+y] == '#':
++                            bagtotal+=1
++            #for j in range(len(i)):
++            #need to copy like we are doingrules
++            if irow == 0:#row=0
++                #don't check -1
++                lkd=0
++                if icol ==0:
++                    kld=0
++                    
++                    if kline[icol+1] == 'L':
++                        if lines[irow][icol] == 'L':
++                            if lines[irow+1][icol+1]=='L':
++                                kld=0
++                    #don't check -1
++            if kline[icol]=='L':
++                mline.append('M')
++            
++            else:
++                #if count == 0:
++                #    print(f'kline[i]={kline[i]}')
++                if kline[icol] == "[" or kline[icol] == "'" or kline[icol] == "]":
++                    kld=0
++                else:
++                    mline.append(kline[icol])
++                    count+=1
++        else:
++            sline=str('')
++            for x in mline: 
++                sline += x 
++            tlines.append(sline)
++            count=0
++    return tlines
++def solve():
++    path = f'day11seatchart.txt'
++    day11seats=[]          # $
++    tlines=[]
++    rules = """All decisions are based on the number of occupied seats 
++        adjacent to a given seat (one of the eight positions 
++        immediately up, down, left, right, or diagonal from the seat). 
++        The following rules are applied to every seat simultaneously:
++        If a seat is empty (L) and there are no occupied seats adjacent 
++        to it, the seat becomes occupied.  If a seat is occupied (#) 
++        and four or more seats adjacent to it are also occupied, 
++        the seat becomes empty.  Otherwise, the seat's state does not 
++        change.  Floor (.) never changes; seats don't move, and nobody sits on the floor. """
++
++    with open(path, 'r') as file11:
++        for line in file11.readlines():
++            day11seats.append(str(line).rsplit())
++    tlines=fillseats(day11seats)
++    for lidx, line in enumerate(tlines):
++        if lidx % 5 == 0: 
++            print(f'{str(line)[2:10]}', end='  ')
++    print(rules)
++    return 6969
++def builditntheywillcome(numbers,num3,startnum,endnum):
++    numbintwc=[]           #all possible between start and end
++    changed=[]
++    same=[]
++    for jnum in range(startnum,endnum):
++        if jnum == startnum or jnum == startnum+3 or jnum == startnum+6 or jnum == startnum+9:
++            same.append(numbers[jnum])#dont change it ever
++            changed.append(numbers[jnum])
++        else:
++            changed.append(0)#change 
++            same.append(numbers[jnum])#same
++def day10Joltprt2(numbers,num3,one1,three3):
++    startnum=0
++    endnum=0
++    for jindx, jnum in enumerate(numbers):
++        if jindx==0:
++            startnum=jindx
++        elif jnum-numbers[jindx-1]>1:    #Three!What about 2 threes in a row?
++            endnum=jindx
++            numbintwc=builditntheywillcome(numbers,num3,startnum,endnum)
++        """ (((((((((((((((((((((2 ^ 7) * 4) * 16) * 16) * 4) * 4) * 4) * 16) * 16) * 4) * 16) * 4) * 16) * 16) * 4) * 8) * 4) * 8) * 16) * 4) * 2) * 
++        18446744073709551645
++        16295147905179352830000 
++        2024782584832"""
++    return one1*three3,((one1**3)-one1)*((three3**3)-three3)
++def day10Joltages():
++    path = f'day10Joltages.txt'
++    numbers=[0]
++    with open(path, 'r') as input:
++        for line in input.readlines():
++            numbers.append(int(line.rstrip()))#=input.readlines().splitlines()    #numbers = [int(n) for n in day10]
++    numbers.sort()
++    num3=[]
++    #print(numbers)
++    one1=0
++    three3=0
++    for i in range(1,len(numbers)):             #        print(f'{(numbers[i] if i%4==0 else "")}',end='')        print(f'{(numbers[i] if i >88 else "")}',end='')
++        if numbers[i] - numbers[i-1] == 1:
++            one1+=1
++        else:
++            three3+=1
++            num3.append(numbers[i])
++    else:
++        onem=one1-1
++        return one1*(three3+1),(((2**onem)+(three3+1)))  #day10Joltprt2(numbers,num3,one1,three3+1)        #[0, 1, 2, 3, 6, 7, 8, 9, 10, 13, 14, 17, 18, 19, 20, 21, 24, 27, 28, 29, 30, 31, 34, 35, 36, 39, 40, 41, 42, 43, 46, 49, 50, 51, 54, 57, 58, 59, 60, 61, 64, 65, 66, 67, 68, 71, 72, 73, 76, 77, 78, 79, 80, 83, 84, 87, 88, 89, 90, 91, 94, 95, 96, 97, 98, 101, 104, 105, 108, 111, 112, 113, 114, 117, 118, 119, 122, 123, 124, 125, 128, 131, 132, 133, 134, 135, 138, 139, 142, 145, 146, 147, 148, 149, 153]
++    lkd=0
++    
++
++def sumofsums(day9,cntlidx,psum,begin1):
++    sumofs=0
++    for oidx in range(begin1,cntlidx-1):
++        sumofs+=day9[oidx]
++        if sumofs > psum:
++            return begin1,oidx,False
++        elif sumofs == psum:
++            return begin1,oidx,True 
++
++def day9part2(day9,cntlidx,psum):
++    sumsp=[]
++    begin1=0
++    for pidx in range(cntlidx):        #for oidx in range(pidx+1,cntlidx):
++        sumsp.append(day9[pidx]+day9[pidx+1])
++    sumequal= True
++    #while sumequal:
++    for pidx in range(begin1,cntlidx-1):
++        begin1,end1,sumequal=sumofsums(day9,cntlidx,psum,pidx)
++        if sumequal:     return min(day9[begin1:end1]) + max(day9[begin1:end1])    #    break
++    #tmp1=day9[begin1] 55732936
++    #tmp2=day9[begin1+1]
++    #tmp3=day9[end1]
++    #icntr=0
++    #for oidx in range(begin1,end1):
++    #    if day9[oidx] < day9[oidx+1]:
++    #        if icntr<((end1 - begin1) / 2):
++    #            begin1=oidx
++    #        else:
++    #            end1=oidx
++    #            #break
++    #    icntr+=1
++    #    print(f'{day9[oidx]}',end='    ')
++    #return day9[begin1]+day9[end1]
++def foundsum(day9,asize,control,pbool):
++    for pidx in range(asize):
++        for oidx in range(pidx+1,asize): #this wont work    ap9=int(day9[pidx+cidx])    ao9=int(day9[oidx+cidx])    aa9=int(day9[cidx+asize])
++            if pidx==oidx:
++                lkd=0
++            elif day9[pidx+control] + day9[oidx+control] == day9[asize+control]:
++                pbool=True
++                return pbool
++            else:
++                lkd=1
++    #else:        if not pbool: return False        else: lkd=0
++    #18527440    24097807    20804499    29896884    21250506    22674194    25441452    23472142    23804453    35735535    37205496    36695485    26983955    25254094    25584276    34697022 
++    return pbool
++def day9xmascipher():
++    debugpy.debug_this_thread()
++    path = 'day9xmascipher.txt'
++    day9=[]
++    asize=25            #de=deque([0]*asize,asize)
++    with open(path, 'r') as file9:
++        while line:=file9.readline().strip():
++            day9.append(int(line))
++        #day9 = file9.read().splitlines()            #for idx in range(asize):    #    de.appendleft(day9[idx])           
++    upperrangA=len(day9)-(asize+1)    #    1000-26=974
++    lastnumit=day9[999]
++    pbool=False        #    firsttime=True#controller for 0+25 to len(day9) 1689 is too low
++    for cidx in range(upperrangA):    #ans's[index] is 25-999 & cidx0-974
++        if cidx == 145: 
++            debugpy.breakpoint()
++        #if cidx >0 and not pbool:
++        #    print(f'day9^^^{cidx}^^^{day9[(cidx-1)+asize]}',end='    ')
++        pbool=False
++        if not foundsum(day9,asize,cidx,False):
++            return cidx,day9[cidx+asize],day9part2(day9,cidx,day9[cidx+asize])
++    return day9[upperrangA]
++def day8infloopacc(nopcount,jmpcount,Limit):
++    jmpycount=0
++    nopycount=0
++    accum=0
++    linenum=0
++    notunique=[]
++    unicorn=[]
++    FOUND=False
++    path = f'day8infloopacc.txt'
++    file8= open(path, 'r')
++    lines = [line.strip() for line in file8.readlines() if line.strip()]
++    file8.close()
++
++    for pidx,pline in enumerate(lines): 
++        pops= pline.split()[0]
++        if pops  == 'jmp':
++            jmpycount+=1
++            if jmpycount == jmpcount:
++                lines[pidx].replace('jmp','nop')
++        elif pops == 'nop':
++            nopycount+=1
++            if nopycount == nopcount:
++                lines[pidx].replace('nop','jmp')
++        #if pline in unicorn:
++        #    if pline.split()[0] == 'jmp':
++        #        notunique.append(pline)
++        #else:
++        #    unicorn.append(pline)
++    #print()
++    notunique=[]
++    unicorn=[]
++    while True:        #for linenum,line in enumerate(lines):
++        if accum > Limit: break
++        ops,acc = lines[linenum].split(' ')
++        if ops == 'acc':
++            linenum+=1
++            accum+= int(acc)
++            #print(f'()={ops}{acc},accln={linenum},accum={accum}', end='    ')
++        elif ops == 'jmp':
++            linenum+=int(acc)
++            #if linenum in unicorn:
++            #    print(f'()={ops}{acc},jmpto={linenum},accum={accum}', end='***********************    ')
++            #   # break
++            #else:
++            #    unicorn.append(linenum)
++            #print(f'()={ops}{acc},jmpto={linenum},accum={accum}', end='    ')
++            if linenum> len(lines) or linenum < 0: # or accum > 6000:
++                break
++            else:
++                continue
++        else:
++            linenum+=1
++            #print(f'()={ops}{acc},nopln={linenum},accum={accum}', end='    ')
++    #if accum < 1000000:
++    return accum
+ def day7bags():
+     countline=0
+     totalcommas=0
+     largestline=0
+     indexofMergeit=0
++    countbags=0
+     constChildLit='#'
+     dedupe=[]
+     mergeit=[]
++    bagkvp=[]
++    nextones=[]
++    deadends=[]
++    bloodys1=[]
+     path = f'day7bagrules.txt'
+     file1 = open(path, 'r')
+     while True:
+@@ -606,14 +916,11 @@ def day7bags():
+             root=line.split(' contain ')
+             poproot=root[0]
+             bagroot=root[1].split(', ')
+-            for bagchild in bagroot:
+-                #if str(bagchild).__contains__('bags'):
+-                #    str(bagchild).replace('bags','bag')
++            for bagchild in bagroot:                                                        #if str(bagchild).__contains__('bags'):                #    str(bagchild).replace('bags','bag')
+                 ptemp0=f'{constChildLit}{str(bagchild[2:])}'
+-                ptemp1=f'{ptemp0} : {str(bagchild[0])}'
++                ptemp1=f'{ptemp0}'#' : {str(bagchild[0])}'
+                 dedupe.append(ptemp1)
+-                if countline>42:
+-                    breakpoint
++                #if countline>42:                     breakpoint
+                 if len(mergeit) > 0:
+                     #indexofMergeit= i
+                     for i, j in enumerate(mergeit):
+@@ -623,8 +930,10 @@ def day7bags():
+                             break
+                     else:
+                         mergeit.append(f'{ptemp1} | {poproot}')   #if indexofMergeit == []:                        #    indexofMergeit = 0                        #if mergeit.__contains__(ptemp0):                        #if indexofMergeit == 0: # or indexofMergeit == []:                                    #else:                    #ptemp3=mergeit[i]
++                        bagkvp.append(f'{ptemp0[1:]}')
+                 else:    
+                     mergeit.append(f'{ptemp1} | {poproot}')
++                    bagkvp.append(f'{ptemp0[1:]}')            
+             if line.__contains__(','):
+                 countcommas=line.count(',') +1
+             else:
+@@ -632,6 +941,7 @@ def day7bags():
+             if countcommas > largestline:
+                 largestline=countcommas
+             totalcommas+=countcommas            #bagchild = bagroot.split()            #Bag = namedtuple('Bag', dedupe)
++
+     ntstr=  """
+             # Basic example
+             >>> Point = namedtuple('Point', ['x', 'y'])
+@@ -645,33 +955,79 @@ def day7bags():
+             33
+             >>> p                       # readable __repr__ with a name=value style
+             Point(x=11, y=22)"""
+-    file2=open('text.txt','w')
+-    for i in mergeit:
+-        file2.write(i + '\n')
+-    return countline,largestline,totalcommas
+-def drilldownbags(mergechild, usedbagsstr,countbags,bagkvp)#bagkvp=shiny gold bag,146#ABD 1 4 clear blue bag
++    #need to keep trak where we are at all get_top_n_items_from_list
++    #When are we done
++    WriteMergit(mergeit,bagkvp)
++   
++    usedbagsstr='shiny gold bag,'
++    mergechild= 'shiny gold bag'
++    masterliststr=str(mergeit[bagkvp.index(f'{mergechild}')])
++    MASTERLIST=masterliststr.split('| ')[1].split(', ')
++  # for tempaaaa in MASTERLIST: nextones.append(f'{constChildLit}{str(tempaaaa)}')
++    for bagidx,bagval in enumerate(MASTERLIST):
++        usedbagsstr,countbags,nextones,deadends=drilldownbags(bagval,usedbagsstr,countbags,bagkvp,mergeit,nextones,deadends,constChildLit)
++    if len(nextones) > 0:
++        for tempo in nextones:
++            if usedbagsstr.__contains__(tempo):
++                nextones.remove(tempo)
++    if len(nextones) > 0:
++        for nxtval in nextones:
++            bloodys1.append(nxtval)
++            nextones.remove(nxtval)
++        for bldval in bloodys1:
++            usedbagsstr,countbags,nextones,deadends=drilldownbags(bldval,usedbagsstr,countbags,bagkvp,mergeit,nextones,deadends,constChildLit)    
++    return countline,largestline,totalcommas,countbags    
++def WriteMergit(mergeit, bagkvp):
++    file2=open('mergeit.txt','w')
++    for ik in mergeit: file2.write(ik + '\n')
++    else: file2.close()
++    file3 =open('bagkvp.txt','w')
++    for ji in bagkvp: file3.write(ji + '\n')
++    else: file3.close()
++def drilldownbags(mergechild, usedbagsstr,countbags,bagkvp,mergeit,nextones,deadends,constChildLit):
++    #bagkvp=shiny gold bag,146#ABD 1 4 clear blue bag
+     #use mergit to get all shiny gold bag
+-    shinygoldindex= mergeit.index('#shiny gold bag : 146 | clear blue bag, bright coral bag, muted cyan bag, pale blue bag, dim maroon bag, light gray bag')
+-    sgb=str(mergeit[shinygoldindex])
+-    ss1=sgb.split('| ')
+-    ss9=str(ss1[1])
+-    ss2=ss9.split(', ')
+-    ss3=[]
+-    ss4=[]
+-    for bagidx, bagdict in enumerate(ss2):
+-        st3=str(bagdict)
+-        ss3.append(f'{constChildLit}{st3}')    #        sn1= bagidx
+-    for childidx, childval in enumerate(ss3):
+-        for mergidx,mergval in enumerate(mergeit):
+-            #mergval has each single element of the mergeit
+-            mergstr = str(mergval)
+-            mergstr1= mergstr.split('| ')
+-            mergstr2= str(mergstr1[1])
+-            mergstr3=mergstr2.split(', ')
+-            if mergstr3.__contains__('#shiny gold bag'):
+-                countbags+=1
+-                ss4.append(mergstr3)
+-
++    if bagkvp.__contains__(mergechild):
++        shinygoldindex= bagkvp.index(f'{mergechild}')#mergeit.index('#shiny gold bag : 146 | clear blue bag, bright coral bag, muted cyan bag, pale blue bag, dim maroon bag, light gray bag')
++        usedbagsstr+=f'{mergechild}, '
++        nextones.append(f'{mergechild}')
++        countbags+=1
++        sgb=str(mergeit[shinygoldindex])
++        ss2=sgb.split('| ')[1].split(', ')
++        for tempaaaa in ss2: nextones.append(f'{str(tempaaaa)}')
++        ss3=[]
++        ss4=[]
++        for bagidx, bagdict in enumerate(ss2):
++            ss3.append(f'{str(bagdict)}')    #        sn1= bagidx
++            #nextones.append(f'{constChildLit}{str(st3)}')
++        for childidx, childval in enumerate(ss3):#just get it from bagkvp
++            #for mergidx,mergval in enumerate(mergeit): #need another subroutine
++            if bagkvp.__contains__(childval):
++                tempw=str(mergeit[bagkvp.index(f'{childval}')])
++                nextones.append(str(childval))
++                #for tmpidx,tmpval in enumerate(bagkvp):
++                #if str(tmpval) == childval:
++                #   tempw=str(mergeit[bagkvp.index(f'{childval}')])
++                #me rgval has each single element of the mergeit
++                #mergstr = str(mergval)
++                mergstr3= tempw.split('| ')[1].split(', ')    #            mergstr2= str(mergstr1[1])            mergstr3=mergstr2.split(', ')
++                for tempx in mergstr3:
++                    if bagkvp.__contains__(f'{tempx}'):
++                        if not usedbagsstr.__contains__(tempx):
++                            countbags+=1
++                            ss4.append(tempx)
++                            usedbagsstr+=f'{tempx}, '
++                            if nextones.__contains__(tempx): nextones.remove(tempx)
++                        else:
++                            countbags+=1
++                            deadends.append(f'{tempx}, ')                    
++                    else:
++                        countbags+=1
++                        deadends.append(f'{tempx}, ')
++                        #nextones.remove(tempx)
++    else:
++        tempp=0#douhave the balls to recusivelly call this thing    
++    return usedbagsstr,countbags,nextones,deadends
+ def day6answers():
+     countline=0
+     countanswers=0
+@@ -1251,4 +1607,4 @@ lock = threading.Lock()
+ 
+ def thread_safe_print(*args, **kwargs):
+     with lock:
+-        print(*args, **kwargs)
++        print(*args, **kwargs)
+\ No newline at end of file
+diff --git a/LearningPy/stringsnumbersclass.py b/LearningPy/stringsnumbersclass.py
+deleted file mode 100644
+index acea995..0000000
+--- a/LearningPy/stringsnumbersclass.py
++++ /dev/null
+@@ -1,9 +0,0 @@
+-class Patient:
+-    def __init__(self, name, age, is_new):
+-        self.name = name
+-        self.age = age
+-        self.is_new = is_new
+-
+-    def printpatient(pat):
+-        print("{} is ('' if {} else 'not ')a new patient. he is {}.".format(name,is_new,age))
+-    
+\ No newline at end of file
+diff --git a/LearningPy/text.txt b/LearningPy/text.txt
+index 6e8bdfd..4af0ddb 100644
+--- a/LearningPy/text.txt
++++ b/LearningPy/text.txt
+@@ -1,350 +1,418 @@
+-#vibrant green bag : 1 | striped orange bag, dark green bag, bright lime bag, wavy lime bag, shiny silver bag, pale magenta bag, pale white bag, faded aqua bag, pale lavender bag, dark crimson bag, bright plum bag
+-#plaid yellow bag : 5 | striped orange bag, vibrant crimson bag, dull magenta bag, posh yellow bag
+-#drab magenta bag : 1 | striped orange bag, dull aqua bag, clear yellow bag, vibrant violet bag, pale white bag, dull turquoise bag
+-#wavy indigo bag : 3 | dark fuchsia bag
+-#striped lime bag : 4 | dark fuchsia bag, light black bag, wavy teal bag, faded tomato bag
+-#clear gold bag : 2 | clear maroon bag, muted teal bag, dull aqua bag, dull purple bag, pale chartreuse bag, dim orange bag, plaid tomato bag, light gray bag, dark plum bag
+-#bright salmon bag : 5 | clear maroon bag, shiny lavender bag, clear blue bag, vibrant olive bag, pale turquoise bag, bright magenta bag, light purple bag, shiny gold bag
+-#wavy tomato bag : 5 | clear maroon bag, plaid chartreuse bag, drab beige bag, wavy fuchsia bag, vibrant silver bag
+-#dim brown bag : 4 | faded tan bag, light black bag, posh beige bag, striped olive bag
+-#faded gray bag : 3 | wavy olive bag, dim fuchsia bag, posh gold bag, plaid red bag, wavy aqua bag, dim gold bag, light brown bag
+-#posh brown bag : 2 | wavy olive bag, light salmon bag, dull blue bag, muted lavender bag, light bronze bag, shiny gold bag, dark black bag
+-#striped cyan bag : 3 | wavy olive bag, plaid indigo bag, wavy turquoise bag, wavy tan bag, clear orange bag, bright salmon bag, bright teal bag, dark tan bag
+-#vibrant plum bag : 4 | light plum bag, striped coral bag, drab lime bag
+-#dotted gold bag : 4 | vibrant cyan bag, mirrored olive bag, faded red bag, light white bag
+-#bright indigo bag : 4 | vibrant cyan bag, plaid orange bag, mirrored tan bag, faded indigo bag, wavy lavender bag
+-#wavy lime bag : 4 | vibrant cyan bag, plaid aqua bag, wavy coral bag, wavy beige bag, faded lime bag, striped white bag
+-#clear plum bag : 3 | vibrant cyan bag, light teal bag
+-#wavy silver bag : 1 | vibrant beige bag, faded black bag, pale yellow bag, dull indigo bag, striped beige bag, dim gray bag
+-#shiny indigo bag : 4 | vibrant beige bag, drab bronze bag, light violet bag, drab olive bag
+-#wavy aqua bag : 2 | vibrant beige bag, plaid gold bag
+-#mirrored cyan bag : 1 | vibrant beige bag, muted tomato bag, plaid orange bag, pale salmon bag, posh yellow bag, bright purple bag, clear chartreuse bag, muted yellow bag, plaid white bag
+-#muted green bag : 5 | light tomato bag, vibrant olive bag, faded lime bag, vibrant salmon bag, faded lavender bag
+-#striped tomato bag : 2 | light tomato bag, muted teal bag, wavy lime bag, bright blue bag, striped lavender bag
+-#faded aqua bag : 4 | light tomato bag, clear plum bag, pale lime bag
+-#muted salmon bag : 2 | light tomato bag, posh brown bag, dotted gray bag, mirrored violet bag, shiny black bag, pale gray bag, clear indigo bag
+-#faded beige bag : 5 | drab white bag, dark coral bag, faded gold bag
+-#light purple bag : 1 | drab white bag, posh silver bag, dim coral bag, faded fuchsia bag
+-#striped white bag : 1 | drab white bag, striped yellow bag, dim yellow bag, muted bronze bag
+-#muted cyan bag : 4 | drab white bag, dotted bronze bag, bright violet bag, striped teal bag, dark coral bag, light blue bag, mirrored cyan bag, plaid plum bag, light bronze bag, posh bronze bag
+-#posh lime bag : 5 | faded purple bag, dotted chartreuse bag, wavy magenta bag, posh violet bag, striped silver bag, pale blue bag, muted beige bag, vibrant silver bag, bright black bag, drab aqua bag
+-#dim bronze bag : 1 | striped violet bag, vibrant red bag, muted aqua bag, striped silver bag, light cyan bag, clear black bag, posh fuchsia bag, faded plum bag, wavy lavender bag, vibrant magenta bag
+-#faded plum bag : 2 | striped violet bag, shiny salmon bag, clear plum bag, dark brown bag, dim green bag, dark salmon bag, vibrant white bag, pale yellow bag, drab lime bag, striped cyan bag, bright salmon bag, dotted olive bag, drab tan bag, clear beige bag, striped fuchsia bag, shiny plum bag
+-#shiny salmon bag : 2 | pale teal bag, shiny lavender bag, dim coral bag, dotted salmon bag, wavy silver bag, wavy cyan bag
+-#light tomato bag : 2 | pale teal bag, mirrored purple bag
+-#dim coral bag : 5 | pale teal bag, wavy purple bag, light salmon bag, drab silver bag, dull cyan bag, pale chartreuse bag, muted silver bag, dull gray bag
+-#bright tomato bag : 3 | dull lime bag, vibrant coral bag, dark turquoise bag, mirrored aqua bag, shiny violet bag, light aqua bag, dotted beige bag, shiny cyan bag, bright fuchsia bag, striped fuchsia bag
+-#dim magenta bag : 3 | dull lime bag, clear tan bag, muted tan bag, muted chartreuse bag, dim brown bag, muted blue bag, bright purple bag
+-#bright cyan bag : 3 | dull lime bag, light black bag, vibrant coral bag, dark bronze bag, dotted magenta bag, vibrant green bag
+-#dark teal bag : 2 | dull lime bag, muted teal bag, shiny fuchsia bag, clear coral bag, mirrored crimson bag, dark gold bag, mirrored beige bag
+-#dark chartreuse bag : 3 | dim salmon bag
+-#shiny coral bag : 2 | faded teal bag, dull plum bag, light olive bag, shiny maroon bag, clear fuchsia bag
+-#dark turquoise bag : 4 | faded teal bag, dark lavender bag, dark indigo bag, dark maroon bag
+-#wavy black bag : 3 | faded teal bag, light gold bag
+-#clear blue bag : 4 | dark green bag, mirrored magenta bag, bright gray bag, shiny lime bag, dull teal bag, clear coral bag, vibrant blue bag
+-#vibrant bronze bag : 2 | dim black bag, plaid chartreuse bag, striped tan bag
+-#faded salmon bag : 2 | light yellow bag, posh maroon bag, clear cyan bag, dull violet bag, bright tomato bag, muted salmon bag, clear gold bag, striped cyan bag, light fuchsia bag, dull chartreuse bag, plaid magenta bag
+-#muted aqua bag : 4 | light yellow bag, shiny gray bag, dim green bag, shiny fuchsia bag, drab magenta bag, pale aqua bag, dull silver bag, shiny gold bag, mirrored tan bag, wavy bronze bag, vibrant chartreuse bag
+-#clear green bag : 3 | drab brown bag, wavy plum bag, posh lime bag, muted salmon bag, mirrored tomato bag, dim crimson bag, mirrored chartreuse bag, drab black bag, mirrored cyan bag, posh yellow bag, vibrant plum bag, faded plum bag, striped fuchsia bag
+-#pale aqua bag : 2 | drab brown bag, dark aqua bag, mirrored blue bag
+-#vibrant purple bag : 3 | dotted tomato bag
+-#vibrant tomato bag : 3 | dotted tomato bag, wavy purple bag, faded bronze bag, striped olive bag
+-#clear lime bag : 3 | dotted tomato bag, light lime bag, striped yellow bag, striped blue bag, vibrant chartreuse bag
+-#dim gold bag : 5 | dotted tomato bag
+-#pale brown bag : 1 | faded orange bag, dark yellow bag, wavy maroon bag, mirrored tomato bag, bright salmon bag, wavy yellow bag, dotted olive bag
+-#striped silver bag : 1 | light black bag, light orange bag, muted lavender bag, posh white bag, plaid violet bag
+-#muted fuchsia bag : 5 | plaid turquoise bag, dull tan bag
+-#dull violet bag : 1 | plaid turquoise bag, faded brown bag, muted gold bag, dark silver bag, wavy maroon bag, dotted silver bag, vibrant silver bag, mirrored cyan bag, mirrored violet bag, dull silver bag, posh magenta bag
+-#wavy blue bag : 5 | light lime bag, dim cyan bag, dotted turquoise bag, pale chartreuse bag, dotted white bag, dotted fuchsia bag, muted tomato bag, dim plum bag, drab tan bag, bright bronze bag
+-#dotted blue bag : 2 | plaid blue bag, muted magenta bag
+-#light brown bag : 5 | plaid blue bag, clear cyan bag, drab plum bag, plaid brown bag, plaid white bag
+-#posh teal bag : 5 | plaid blue bag
+-#bright lavender bag : 2 | vibrant maroon bag, dim violet bag, clear aqua bag, dull gold bag, pale gray bag
+-#wavy magenta bag : 1 | light orange bag, plaid indigo bag, faded gray bag, posh chartreuse bag, plaid purple bag, pale white bag
+-#clear orange bag : 3 | light orange bag, striped crimson bag, shiny orange bag, mirrored lime bag, pale orange bag, mirrored silver bag, dark teal bag, striped indigo bag, light purple bag, pale gray bag, dull maroon bag
+-#plaid red bag : 2 | bright beige bag, plaid indigo bag, vibrant white bag, striped salmon bag
+-#dull aqua bag : 1 | bright beige bag, posh salmon bag, drab cyan bag, posh white bag, vibrant blue bag, dim turquoise bag
+-#bright fuchsia bag : 3 | bright beige bag, muted green bag, muted indigo bag, pale plum bag, muted lime bag, clear lavender bag, light aqua bag, clear gold bag, faded cyan bag, light gray bag
+-#faded maroon bag : 3 | striped crimson bag, light coral bag, dotted fuchsia bag, bright gold bag
+-#dull chartreuse bag : 3 | striped crimson bag, plaid chartreuse bag, mirrored teal bag, dark silver bag, pale orange bag, light cyan bag, vibrant silver bag, dotted blue bag, mirrored turquoise bag, posh fuchsia bag, dull silver bag, drab aqua bag
+-#mirrored red bag : 4 | striped crimson bag, dull salmon bag, dark salmon bag, dull teal bag
+-#pale plum bag : 3 | posh silver bag, drab purple bag
+-#light salmon bag : 4 | posh silver bag, drab silver bag, drab blue bag, wavy tan bag, faded red bag
+-#dark white bag : 2 | dull white bag, dotted salmon bag, posh violet bag, vibrant yellow bag
+-#clear indigo bag : 4 | bright lime bag, clear violet bag, pale indigo bag
+-#light lime bag : 3 | bright crimson bag
+-#vibrant magenta bag : 3 | dull lavender bag, posh salmon bag, dull violet bag, wavy maroon bag, drab magenta bag, posh brown bag, dark teal bag, dull gold bag, pale lavender bag, dark crimson bag
+-# other bag : n | pale purple bag, bright chartreuse bag, dim bronze bag, light crimson bag, shiny teal bag, dull olive bag, faded salmon bag, pale brown bag, clear green bag, faded coral bag
+-#dotted black bag : 4 | dull black bag, posh cyan bag, dark lavender bag, bright brown bag
+-#clear lavender bag : 5 | shiny salmon bag, drab turquoise bag, faded gray bag, dim blue bag, bright indigo bag, striped cyan bag
+-#light crimson bag : 1 | shiny salmon bag, wavy plum bag, dull violet bag, muted beige bag, dark teal bag, bright orange bag, mirrored gray bag
+-#light gray bag : 2 | shiny salmon bag, dark bronze bag, light aqua bag, posh yellow bag, bright tan bag, striped beige bag
+-#striped indigo bag : 1 | vibrant red bag, posh gold bag, muted fuchsia bag, pale aqua bag, shiny cyan bag, pale indigo bag, pale fuchsia bag
+-#vibrant silver bag : 1 | vibrant red bag, dotted indigo bag, drab magenta bag, posh plum bag
+-#posh purple bag : 1 | plaid beige bag, vibrant tomato bag
+-#pale bronze bag : 5 | plaid beige bag, dark bronze bag, dotted tan bag, posh red bag
+-#dotted white bag : 1 | plaid beige bag, dim red bag, wavy black bag, pale plum bag, light blue bag
+-#wavy salmon bag : 1 | striped bronze bag, mirrored maroon bag, posh crimson bag, bright orange bag, faded indigo bag
+-#posh fuchsia bag : 4 | shiny lavender bag, faded blue bag, dark white bag, bright magenta bag, muted blue bag, drab tan bag, vibrant fuchsia bag
+-#dim blue bag : 2 | wavy white bag
+-#faded silver bag : 5 | wavy white bag, muted violet bag, striped maroon bag, shiny black bag
+-#shiny silver bag : 5 | wavy white bag
+-#shiny beige bag : 2 | wavy white bag, dotted turquoise bag, faded lime bag
+-#muted lavender bag : 5 | mirrored teal bag, clear plum bag, muted indigo bag, clear violet bag, striped chartreuse bag, striped aqua bag, wavy green bag, faded cyan bag, light red bag, striped lime bag, faded maroon bag, posh orange bag
+-#clear magenta bag : 1 | dotted bronze bag, plaid aqua bag, dim lavender bag, dotted silver bag, posh red bag, striped white bag
+-#muted silver bag : 2 | dotted bronze bag, plaid indigo bag, clear gray bag, faded white bag, dim olive bag
+-#shiny fuchsia bag : 5 | dim red bag, dim indigo bag, plaid crimson bag, vibrant indigo bag
+-#dull white bag : 2 | shiny crimson bag, drab orange bag, faded turquoise bag
+-#vibrant maroon bag : 2 | shiny crimson bag
+-#posh cyan bag : 5 | faded olive bag, striped turquoise bag, drab lavender bag
+-#striped gold bag : 5 | mirrored gold bag, muted plum bag, dark salmon bag, vibrant tan bag
+-#shiny green bag : 5 | dim cyan bag, muted gold bag, light salmon bag, vibrant brown bag, shiny brown bag, faded gold bag, bright fuchsia bag
+-#mirrored lime bag : 3 | dim cyan bag, vibrant orange bag, vibrant tomato bag, plaid salmon bag, dull brown bag, mirrored maroon bag, vibrant blue bag, vibrant green bag, dotted aqua bag
+-#dark plum bag : 4 | dim cyan bag, wavy chartreuse bag, pale chartreuse bag, wavy lime bag, dotted lime bag
+-#bright chartreuse bag : 1 | vibrant orange bag, wavy magenta bag, muted fuchsia bag, vibrant black bag, mirrored red bag, plaid violet bag, shiny coral bag, bright lavender bag
+-#pale crimson bag : 3 | vibrant orange bag, dull aqua bag, pale plum bag, dotted salmon bag, striped silver bag, clear lavender bag, faded turquoise bag, pale tan bag, dotted lime bag, drab aqua bag
+-#muted beige bag : 4 | vibrant orange bag, pale lime bag, mirrored tan bag
+-#dull olive bag : 5 | pale beige bag, shiny gray bag, muted white bag, bright gray bag, plaid silver bag, vibrant teal bag, muted turquoise bag, bright tomato bag, dim crimson bag, mirrored black bag, vibrant salmon bag
+-#faded red bag : 1 | posh lavender bag, dark yellow bag, wavy black bag, dotted purple bag, dark chartreuse bag
+-#wavy maroon bag : 2 | posh lavender bag, muted cyan bag
+-#dull black bag : 3 | plaid teal bag
+-#muted tan bag : 5 | plaid teal bag, striped blue bag, dull blue bag, striped maroon bag, dark crimson bag, plaid white bag
+-#posh salmon bag : 1 | wavy red bag
+-#light black bag : 1 | wavy red bag, drab salmon bag, clear bronze bag
+-#drab olive bag : 2 | wavy red bag, mirrored lavender bag, vibrant violet bag, plaid plum bag, bright plum bag
+-#drab beige bag : 4 | wavy red bag, striped gold bag, dark tomato bag, shiny purple bag, bright olive bag
+-#bright yellow bag : 5 | drab maroon bag
+-#light yellow bag : 1 | clear tan bag, light coral bag, dark brown bag, muted white bag, drab violet bag, dim coral bag, drab magenta bag, bright gold bag, mirrored tan bag, wavy green bag
+-#mirrored indigo bag : 2 | clear tan bag
+-#dotted olive bag : 2 | clear tan bag, striped gold bag, pale magenta bag, shiny green bag, pale white bag, bright purple bag, muted silver bag, striped tomato bag, dark red bag, wavy cyan bag
+-#clear crimson bag : 1 | striped turquoise bag, vibrant lavender bag
+-#bright bronze bag : 3 | posh turquoise bag, muted maroon bag, wavy brown bag
+-#bright orange bag : 5 | posh turquoise bag, striped red bag, dotted violet bag
+-#posh yellow bag : 3 | dark turquoise bag
+-#dull red bag : 4 | dark turquoise bag, wavy indigo bag, shiny red bag
+-#plaid silver bag : 5 | dark turquoise bag, light maroon bag, posh violet bag, drab fuchsia bag, dotted lavender bag
+-#wavy bronze bag : 2 | posh green bag, wavy fuchsia bag
+-#muted gold bag : 2 | muted green bag, bright cyan bag, bright indigo bag, dull red bag, plaid black bag
+-#light orange bag : 3 | muted green bag, mirrored lime bag, shiny turquoise bag
+-#pale chartreuse bag : 4 | dotted coral bag, drab silver bag, faded blue bag, plaid purple bag, dim maroon bag
+-#bright gray bag : 2 | bright silver bag, dark tomato bag, light turquoise bag, dotted brown bag
+-#pale teal bag : 5 | drab chartreuse bag, bright aqua bag, light blue bag, light gold bag, wavy gray bag, mirrored orange bag
+-#posh white bag : 3 | muted plum bag, muted coral bag
+-#bright red bag : 1 | muted plum bag, light magenta bag, plaid maroon bag
+-#dim beige bag : 1 | dark bronze bag, posh tan bag, dim gold bag
+-#dark black bag : 3 | dim fuchsia bag, drab blue bag, drab purple bag, plaid brown bag, dim gold bag, plaid magenta bag
+-#mirrored chartreuse bag : 3 | dim fuchsia bag, posh cyan bag, dull crimson bag, mirrored tomato bag, posh gray bag, drab plum bag, striped plum bag, pale crimson bag, bright salmon bag, faded plum bag, dim tomato bag, light indigo bag, dull maroon bag
+-#wavy white bag : 3 | faded brown bag
+-#vibrant fuchsia bag : 4 | bright green bag
+-#shiny white bag : 2 | bright green bag, striped magenta bag, dark chartreuse bag
+-#mirrored blue bag : 3 | bright green bag, muted tomato bag
+-#posh aqua bag : 4 | bright green bag, plaid cyan bag, dim chartreuse bag
+-#dark coral bag : 4 | shiny orange bag, dotted indigo bag
+-#bright teal bag : 2 | shiny orange bag, faded yellow bag
+-#dotted brown bag : 5 | shiny orange bag, pale black bag, pale cyan bag
+-#shiny gold bag : 2 | clear blue bag, bright coral bag, muted cyan bag, pale blue bag, dim maroon bag, light gray bag
+-#wavy olive bag : 4 | vibrant olive bag, vibrant bronze bag, mirrored crimson bag, wavy green bag
+-#striped plum bag : 3 | muted gold bag, bright cyan bag, dark brown bag, faded yellow bag, dark magenta bag, clear gold bag, dotted yellow bag, striped brown bag
+-#shiny purple bag : 4 | plaid aqua bag, plaid plum bag, dark chartreuse bag
+-#striped violet bag : 3 | plaid aqua bag, striped blue bag, drab teal bag, dull brown bag, shiny gold bag
+-#wavy plum bag : 5 | vibrant turquoise bag, mirrored lime bag, faded gray bag, dull bronze bag, wavy magenta bag, shiny beige bag, dim coral bag, dim white bag, muted beige bag, faded crimson bag, dotted olive bag, wavy silver bag, bright black bag, striped fuchsia bag, posh bronze bag
+-#drab crimson bag : 2 | light teal bag
+-#drab violet bag : 1 | light coral bag, drab yellow bag, clear gray bag, vibrant indigo bag, clear black bag
+-#dim crimson bag : 5 | bright cyan bag, dotted plum bag, bright tomato bag, wavy violet bag, shiny green bag, plaid orange bag, faded aqua bag, posh fuchsia bag, dim plum bag, dotted beige bag, bright plum bag
+-#dull bronze bag : 4 | wavy purple bag, clear brown bag, dotted purple bag, mirrored plum bag, muted orange bag
+-#pale blue bag : 5 | bright white bag, faded black bag, striped gold bag, dotted fuchsia bag, dark salmon bag, dark tomato bag, pale aqua bag, shiny purple bag, bright black bag, striped aqua bag, plaid magenta bag
+-#dull indigo bag : 3 | clear plum bag, dull yellow bag, bright orange bag
+-#vibrant turquoise bag : 3 | vibrant tomato bag, pale bronze bag, mirrored brown bag, dull fuchsia bag, striped black bag
+-#clear maroon bag : 4 | vibrant tomato bag, dim yellow bag, dark purple bag, pale yellow bag, light violet bag, posh plum bag
+-#dotted gray bag : 4 | muted tan bag, bright gold bag, wavy brown bag
+-#plaid orange bag : 4 | muted tan bag, striped purple bag
+-#pale green bag : 2 | muted tan bag, plaid cyan bag, pale tan bag, dotted red bag
+-#mirrored tomato bag : 2 | dark brown bag, posh black bag, muted aqua bag, wavy fuchsia bag, bright indigo bag, shiny aqua bag, dull indigo bag, dark gray bag, posh blue bag, muted olive bag, faded cyan bag, bright teal bag
+-#muted indigo bag : 5 | striped yellow bag, shiny beige bag, dotted teal bag, dim violet bag, plaid magenta bag
+-#bright black bag : 4 | striped yellow bag
+-#posh gray bag : 4 | posh black bag, posh maroon bag, wavy coral bag, vibrant brown bag, mirrored salmon bag, light blue bag, striped purple bag, wavy indigo bag, shiny magenta bag
+-#pale orange bag : 5 | wavy black bag, clear coral bag
+-#posh violet bag : 3 | wavy black bag
+-#posh chartreuse bag : 1 | bright coral bag, shiny beige bag, dull orange bag
+-#light violet bag : 4 | posh tomato bag
+-#mirrored olive bag : 1 | posh tomato bag
+-#vibrant gray bag : 5 | posh cyan bag, wavy tomato bag, muted turquoise bag, plaid lime bag, striped aqua bag, faded indigo bag, dotted lavender bag, pale maroon bag, faded maroon bag
+-#light fuchsia bag : 1 | pale silver bag, striped teal bag, dark maroon bag
+-#dark red bag : 4 | pale silver bag
+-#mirrored magenta bag : 1 | dotted indigo bag, shiny chartreuse bag, dim lime bag, shiny bronze bag
+-#plaid gold bag : 4 | dotted indigo bag
+-#shiny blue bag : 5 | light chartreuse bag
+-#drab coral bag : 5 | light chartreuse bag, dark gold bag, muted yellow bag
+-#drab turquoise bag : 4 | light chartreuse bag, plaid gray bag, dark red bag
+-#wavy violet bag : 3 | pale tomato bag
+-#dotted tan bag : 3 | pale tomato bag, bright magenta bag, clear turquoise bag
+-#drab brown bag : 4 | pale tomato bag
+-#dim silver bag : 3 | muted chartreuse bag
+-#dim chartreuse bag : 1 | muted chartreuse bag
+-#striped green bag : 3 | muted chartreuse bag, bright yellow bag, striped brown bag
+-#drab aqua bag : 2 | dull aqua bag, muted violet bag, dotted teal bag, bright blue bag, drab indigo bag, dim aqua bag, clear bronze bag, wavy cyan bag, pale maroon bag
+-#light tan bag : 3 | dark lime bag, dotted plum bag, pale cyan bag, dark red bag
+-#drab orange bag : 4 | dark orange bag, drab turquoise bag, light tan bag, faded yellow bag, faded gold bag
+-#dotted chartreuse bag : 4 | faded black bag, dull coral bag, muted purple bag, dim silver bag
+-#plaid olive bag : 5 | faded black bag, clear violet bag, bright maroon bag, mirrored coral bag, dotted maroon bag, wavy gold bag, light purple bag
+-#wavy lavender bag : 5 | dull purple bag, faded lime bag, vibrant indigo bag, muted blue bag, clear olive bag, pale fuchsia bag
+-#pale purple bag : 3 | dotted gold bag, vibrant brown bag, muted aqua bag, posh lime bag, mirrored aqua bag, drab bronze bag, muted beige bag, dim crimson bag, vibrant gray bag, dotted beige bag, clear olive bag, shiny white bag, posh purple bag
+-#dark olive bag : 1 | dotted gold bag
+-#wavy beige bag : 5 | dotted gold bag
+-#mirrored aqua bag : 2 | dotted gold bag, dull violet bag, wavy maroon bag, muted aqua bag, shiny cyan bag, posh olive bag, mirrored crimson bag, bright fuchsia bag
+-#shiny tomato bag : 2 | pale bronze bag, drab turquoise bag, drab lavender bag, mirrored white bag, posh tan bag
+-#faded coral bag : 4 | bright aqua bag, drab red bag, dim magenta bag, mirrored aqua bag, muted salmon bag, clear tomato bag, striped salmon bag, dim crimson bag, faded plum bag, dim aqua bag, wavy cyan bag, posh bronze bag, vibrant magenta bag, shiny magenta bag
+-#clear olive bag : 2 | bright aqua bag, plaid fuchsia bag, dotted cyan bag
+-#wavy yellow bag : 5 | faded beige bag, pale turquoise bag, striped maroon bag, pale lime bag, plaid gray bag, dotted brown bag
+-#pale lavender bag : 3 | faded beige bag, drab violet bag, mirrored silver bag
+-#vibrant coral bag : 1 | faded beige bag, dim orange bag, clear magenta bag, dull indigo bag
+-#posh bronze bag : 1 | light maroon bag, plaid black bag
+-#dotted silver bag : 3 | light maroon bag, dark olive bag, dotted crimson bag, wavy indigo bag
+-#muted teal bag : 1 | light maroon bag, dull plum bag, light red bag
+-#mirrored maroon bag : 1 | posh maroon bag, plaid tan bag, light turquoise bag, dull gray bag
+-#posh black bag : 1 | posh maroon bag
+-#vibrant salmon bag : 2 | bright red bag, dark violet bag, shiny bronze bag
+-#faded violet bag : 2 | vibrant purple bag
+-#dotted yellow bag : 3 | vibrant crimson bag, light olive bag
+-#pale tan bag : 2 | vibrant crimson bag, shiny brown bag, faded lavender bag
+-#posh turquoise bag : 4 | dim green bag, dull plum bag, dull teal bag, faded red bag
+-#striped fuchsia bag : 1 | striped gray bag, pale green bag, dotted white bag, plaid lime bag, striped indigo bag, dark olive bag, light gray bag
+-#striped beige bag : 4 | light salmon bag, clear cyan bag, dull cyan bag, dotted white bag, vibrant yellow bag, pale salmon bag, dim maroon bag, shiny plum bag
+-#dim maroon bag : 5 | bright violet bag
+-#dark tan bag : 5 | bright violet bag
+-#drab purple bag : 3 | bright violet bag, wavy violet bag
+-#posh red bag : 4 | muted violet bag, dotted teal bag, light aqua bag, dull green bag, shiny plum bag
+-#dull maroon bag : 2 | dull salmon bag, striped green bag
+-#dim turquoise bag : 5 | posh aqua bag, dull magenta bag, dark gray bag, plaid green bag
+-#drab green bag : 5 | posh aqua bag, light olive bag
+-#striped red bag : 2 | posh aqua bag, mirrored orange bag
+-#pale yellow bag : 3 | muted white bag, posh teal bag, muted cyan bag, dotted teal bag, posh tan bag
+-#faded purple bag : 5 | wavy coral bag, clear yellow bag, pale yellow bag, plaid lavender bag, drab purple bag, clear purple bag, pale lavender bag, plaid maroon bag, bright lavender bag
+-#dark tomato bag : 4 | wavy coral bag, pale lime bag, faded white bag, shiny red bag
+-#mirrored violet bag : 1 | dotted plum bag, clear violet bag, bright indigo bag, pale lavender bag
+-#mirrored fuchsia bag : 1 | dotted plum bag, clear teal bag, clear black bag, pale salmon bag, clear red bag
+-#muted lime bag : 2 | mirrored purple bag, mirrored yellow bag, faded lavender bag
+-#mirrored teal bag : 4 | mirrored purple bag
+-#striped orange bag : 3 | drab yellow bag, pale coral bag, posh crimson bag
+-#bright crimson bag : 1 | drab red bag, light green bag
+-#dim gray bag : 5 | muted red bag, mirrored fuchsia bag, clear aqua bag, plaid gray bag, faded fuchsia bag
+-#muted purple bag : 3 | clear cyan bag, drab cyan bag, drab lime bag
+-#clear yellow bag : 2 | plaid cyan bag, shiny blue bag, dim tan bag
+-#shiny gray bag : 4 | plaid cyan bag, wavy tan bag, drab cyan bag, striped indigo bag, shiny chartreuse bag, light fuchsia bag
+-#faded lime bag : 4 | clear brown bag, dim white bag, mirrored silver bag, muted coral bag
+-#clear bronze bag : 2 | clear brown bag, plaid brown bag
+-#light bronze bag : 3 | light tan bag, muted magenta bag
+-#pale fuchsia bag : 4 | muted black bag, muted blue bag, muted maroon bag
+-#bright maroon bag : 3 | muted black bag
+-#striped lavender bag : 3 | muted black bag, dull tomato bag
+-#vibrant blue bag : 1 | dark aqua bag, striped gold bag, striped salmon bag, clear fuchsia bag
+-#drab blue bag : 3 | dim lavender bag, faded silver bag, posh blue bag
+-#plaid lime bag : 1 | bright gray bag, clear yellow bag, dull tomato bag, mirrored white bag, dull indigo bag, faded green bag
+-#faded yellow bag : 1 | mirrored bronze bag
+-#vibrant black bag : 4 | plaid silver bag, dotted white bag, posh lime bag, mirrored aqua bag, clear magenta bag, vibrant gray bag, striped indigo bag, wavy salmon bag, light purple bag, dull chartreuse bag, bright fuchsia bag, shiny coral bag
+-#clear coral bag : 5 | dim yellow bag, dim white bag, dull red bag
+-#plaid magenta bag : 1 | drab orange bag, clear turquoise bag, posh purple bag, bright brown bag, bright teal bag
+-#dull lavender bag : 2 | drab orange bag, drab tomato bag, striped white bag, dull gold bag, clear white bag, clear beige bag
+-#dim cyan bag : 4 | drab orange bag, plaid coral bag, dark white bag
+-#wavy crimson bag : 5 | wavy turquoise bag
+-#posh plum bag : 1 | wavy turquoise bag
+-#faded turquoise bag : 4 | wavy turquoise bag, pale black bag
+-#clear violet bag : 4 | clear yellow bag, muted gray bag, dull maroon bag, dim silver bag, bright bronze bag
+-#vibrant orange bag : 1 | muted crimson bag, dotted gray bag, posh fuchsia bag
+-#posh orange bag : 1 | dull cyan bag
+-#bright lime bag : 5 | shiny fuchsia bag
+-#faded indigo bag : 5 | shiny fuchsia bag, mirrored coral bag, clear silver bag, shiny coral bag
+-#plaid tan bag : 4 | shiny tan bag
+-#dotted lavender bag : 5 | dull bronze bag, drab tan bag, dim gold bag, posh blue bag, clear chartreuse bag, muted maroon bag
+-#clear silver bag : 4 | dim blue bag
+-#muted blue bag : 4 | dim blue bag, vibrant tan bag, faded tomato bag
+-#drab gray bag : 2 | plaid coral bag, faded turquoise bag, pale cyan bag, dull coral bag
+-#dark orange bag : 4 | plaid coral bag
+-#dim fuchsia bag : 3 | striped coral bag
+-#vibrant yellow bag : 5 | striped coral bag, pale red bag, mirrored cyan bag, clear olive bag
+-#mirrored turquoise bag : 1 | striped coral bag, mirrored crimson bag, dark indigo bag, shiny plum bag
+-#wavy gray bag : 1 | dark beige bag, light gold bag, posh magenta bag
+-#muted olive bag : 5 | plaid red bag, vibrant teal bag, drab green bag, drab blue bag, drab teal bag, dull beige bag, plaid fuchsia bag, dull gray bag
+-#dark silver bag : 3 | plaid red bag
+-#dark green bag : 3 | dark purple bag, faded green bag
+-#vibrant white bag : 3 | dull yellow bag, plaid gold bag
+-#dotted teal bag : 4 | dull yellow bag, shiny indigo bag, dim tan bag
+-#dark violet bag : 2 | faded magenta bag, dotted violet bag
+-#light indigo bag : 4 | faded magenta bag
+-#plaid indigo bag : 5 | faded blue bag
+-#posh gold bag : 3 | dark coral bag, pale fuchsia bag
+-#dim lime bag : 3 | dark coral bag, drab coral bag, drab olive bag
+-#faded cyan bag : 1 | drab gold bag, plaid orange bag
+-#dim green bag : 1 | dotted green bag, plaid black bag, mirrored orange bag
+-#wavy red bag : 4 | dotted green bag
+-#vibrant red bag : 2 | mirrored olive bag, dim beige bag, drab teal bag, dull beige bag, dull red bag, muted maroon bag
+-#dim violet bag : 4 | muted lime bag, clear silver bag, dark olive bag, clear crimson bag, posh orange bag
+-#plaid fuchsia bag : 5 | pale violet bag, vibrant lime bag
+-#dotted beige bag : 5 | wavy lime bag, wavy tan bag, plaid purple bag, dim aqua bag, dark red bag
+-#mirrored beige bag : 2 | dotted salmon bag
+-#dark brown bag : 4 | vibrant white bag, wavy blue bag, plaid olive bag, shiny chartreuse bag, light brown bag
+-#dotted lime bag : 1 | vibrant white bag, bright teal bag, dim olive bag
+-#plaid violet bag : 3 | muted brown bag, muted turquoise bag, shiny purple bag, clear white bag, bright orange bag
+-#plaid bronze bag : 4 | striped red bag
+-#shiny aqua bag : 1 | vibrant teal bag, mirrored brown bag
+-#pale violet bag : 4 | light gold bag
+-#shiny magenta bag : 5 | posh violet bag, striped salmon bag
+-#clear turquoise bag : 4 | dull tomato bag, faded lavender bag
+-#dull lime bag : 3 | dull tomato bag, dim purple bag, mirrored indigo bag
+-#vibrant beige bag : 2 | dull blue bag
+-#drab salmon bag : 5 | light magenta bag, muted yellow bag
+-#drab fuchsia bag : 1 | light beige bag, plaid brown bag
+-#shiny cyan bag : 2 | muted fuchsia bag, dull crimson bag, vibrant violet bag, posh olive bag
+-#vibrant brown bag : 2 | muted gray bag, shiny brown bag
+-#dark indigo bag : 4 | bright maroon bag
+-#muted brown bag : 2 | drab crimson bag, striped brown bag
+-#faded fuchsia bag : 1 | drab crimson bag, drab coral bag
+-#dull silver bag : 5 | muted turquoise bag, pale blue bag, clear lime bag, clear olive bag, muted orange bag
+-#vibrant lime bag : 5 | light lavender bag, light olive bag, faded crimson bag, wavy crimson bag
+-#light coral bag : 1 | light lavender bag, dotted red bag
+-#dim olive bag : 5 | striped maroon bag
+-#bright olive bag : 2 | shiny olive bag
+-#muted white bag : 1 | plaid lime bag, dotted lime bag, dotted orange bag
+-#striped salmon bag : 1 | faded yellow bag
+-#shiny teal bag : 5 | dark tomato bag, dull crimson bag, dull green bag, plaid purple bag, striped cyan bag, plaid yellow bag, vibrant plum bag, striped beige bag
+-#muted red bag : 4 | pale coral bag
+-#muted crimson bag : 3 | faded turquoise bag
+-#dark blue bag : 2 | pale gold bag, mirrored brown bag, faded gold bag
+-#dull crimson bag : 1 | muted tomato bag, dark olive bag
+-#dotted salmon bag : 3 | wavy beige bag, wavy gold bag, striped olive bag, dark chartreuse bag
+-#posh olive bag : 5 | dotted violet bag, dotted lime bag, dull brown bag, bright brown bag
+-#shiny red bag : 1 | mirrored yellow bag, pale maroon bag
+-#bright white bag : 2 | plaid salmon bag, dim violet bag, light red bag, muted purple bag
+-#faded tomato bag : 2 | pale black bag, striped black bag, vibrant fuchsia bag
+-#pale beige bag : 3 | pale red bag, light white bag
+-#muted turquoise bag : 5 | shiny tomato bag
+-#pale olive bag : 4 | bright turquoise bag, mirrored plum bag
+-#shiny plum bag : 5 | pale aqua bag, striped purple bag, dark maroon bag
+-#posh tan bag : 1 | shiny indigo bag, bright purple bag
+-#dull brown bag : 1 | dark magenta bag
+-#wavy tan bag : 2 | dark magenta bag, pale maroon bag
+-#faded olive bag : 2 | dark magenta bag, dim teal bag, dull turquoise bag
+-#drab white bag : 5 | wavy violet bag
+-#shiny lavender bag : 4 | shiny purple bag
+-#wavy purple bag : 1 | plaid lavender bag
+-#plaid salmon bag : 1 | dark violet bag, dark tan bag, vibrant fuchsia bag
+-#clear white bag : 3 | dotted blue bag
+-#light cyan bag : 2 | dotted blue bag, plaid green bag
+-#wavy teal bag : 4 | wavy aqua bag, shiny lime bag
+-#muted maroon bag : 5 | wavy aqua bag, plaid tan bag, dotted brown bag
+-#plaid blue bag : 5 | wavy aqua bag, muted coral bag
+-#wavy cyan bag : 2 | mirrored maroon bag, mirrored indigo bag, vibrant aqua bag
+-#bright plum bag : 5 | clear salmon bag
+-#light beige bag : 5 | clear salmon bag
+-#plaid aqua bag : 2 | clear salmon bag
+-#muted violet bag : 3 | bright yellow bag, vibrant lavender bag
+-#dull blue bag : 2 | light violet bag
+-#posh blue bag : 2 | drab coral bag
+-#shiny turquoise bag : 3 | drab coral bag, drab purple bag
+-#vibrant teal bag : 2 | plaid bronze bag, posh indigo bag
+-#dull tan bag : 4 | dull magenta bag, wavy gold bag
+-#dotted tomato bag : 5 | shiny maroon bag
+-#bright purple bag : 5 | faded bronze bag, clear coral bag, plaid maroon bag
+-#dull gray bag : 3 | dark blue bag, vibrant indigo bag, vibrant tan bag, wavy gray bag
+-#dotted plum bag : 1 | dim teal bag
+-#dotted orange bag : 4 | dim teal bag
++#vibrant green bag | striped orange bag, dark green bag, bright lime bag, wavy lime bag, shiny silver bag, pale magenta bag, pale white bag, faded aqua bag, pale lavender bag, dark crimson bag, bright plum bag
++#plaid yellow bag | striped orange bag, vibrant crimson bag, dull magenta bag, posh yellow bag
++#drab magenta bag | striped orange bag, dull aqua bag, clear yellow bag, vibrant violet bag, pale white bag, dull turquoise bag
++#wavy indigo bag | dark fuchsia bag
++#striped lime bag | dark fuchsia bag, light black bag, wavy teal bag, faded tomato bag
++#clear gold bag | clear maroon bag, muted teal bag, dull aqua bag, dull purple bag, pale chartreuse bag, dim orange bag, plaid tomato bag, light gray bag, dark plum bag
++#bright salmon bag | clear maroon bag, shiny lavender bag, clear blue bag, vibrant olive bag, pale turquoise bag, bright magenta bag, light purple bag, shiny gold bag
++#wavy tomato bag | clear maroon bag, plaid chartreuse bag, drab beige bag, wavy fuchsia bag, vibrant silver bag
++#dim brown bag | faded tan bag, light black bag, posh beige bag, striped olive bag
++#faded gray bag | wavy olive bag, dim fuchsia bag, posh gold bag, plaid red bag, wavy aqua bag, dim gold bag, light brown bag
++#posh brown bag | wavy olive bag, light salmon bag, dull blue bag, muted lavender bag, light bronze bag, shiny gold bag, dark black bag
++#striped cyan bag | wavy olive bag, plaid indigo bag, wavy turquoise bag, wavy tan bag, clear orange bag, bright salmon bag, bright teal bag, dark tan bag
++#vibrant plum bag | light plum bag, striped coral bag, drab lime bag
++#dotted gold bag | vibrant cyan bag, mirrored olive bag, faded red bag, light white bag
++#bright indigo bag | vibrant cyan bag, plaid orange bag, mirrored tan bag, faded indigo bag, wavy lavender bag
++#wavy lime bag | vibrant cyan bag, plaid aqua bag, wavy coral bag, wavy beige bag, faded lime bag, striped white bag
++#clear plum bag | vibrant cyan bag, light teal bag
++#wavy silver bag | vibrant beige bag, faded black bag, pale yellow bag, dull indigo bag, striped beige bag, dim gray bag
++#shiny indigo bag | vibrant beige bag, drab bronze bag, light violet bag, drab olive bag
++#wavy aqua bag | vibrant beige bag, plaid gold bag
++#mirrored cyan bag | vibrant beige bag, muted tomato bag, plaid orange bag, pale salmon bag, posh yellow bag, bright purple bag, clear chartreuse bag, muted yellow bag, plaid white bag
++#muted green bag | light tomato bag, vibrant olive bag, faded lime bag, vibrant salmon bag, faded lavender bag
++#striped tomato bag | light tomato bag, muted teal bag, wavy lime bag, bright blue bag, striped lavender bag
++#faded aqua bag | light tomato bag, clear plum bag, pale lime bag
++#muted salmon bag | light tomato bag, posh brown bag, dotted gray bag, mirrored violet bag, shiny black bag, pale gray bag, clear indigo bag
++#faded beige bag | drab white bag, dark coral bag, faded gold bag
++#light purple bag | drab white bag, posh silver bag, dim coral bag, faded fuchsia bag
++#striped white bag | drab white bag, striped yellow bag, dim yellow bag, muted bronze bag
++#muted cyan bag | drab white bag, dotted bronze bag, bright violet bag, striped teal bag, dark coral bag, light blue bag, mirrored cyan bag, plaid plum bag, light bronze bag, posh bronze bag
++#posh lime bag | faded purple bag, dotted chartreuse bag, wavy magenta bag, posh violet bag, striped silver bag, pale blue bag, muted beige bag, vibrant silver bag, bright black bag, drab aqua bag
++#dim bronze bag | striped violet bag, vibrant red bag, muted aqua bag, striped silver bag, light cyan bag, clear black bag, posh fuchsia bag, faded plum bag, wavy lavender bag, vibrant magenta bag
++#faded plum bag | striped violet bag, shiny salmon bag, clear plum bag, dark brown bag, dim green bag, dark salmon bag, vibrant white bag, pale yellow bag, drab lime bag, striped cyan bag, bright salmon bag, dotted olive bag, drab tan bag, clear beige bag, striped fuchsia bag, shiny plum bag
++#shiny salmon bag | pale teal bag, shiny lavender bag, dim coral bag, dotted salmon bag, wavy silver bag, wavy cyan bag
++#light tomato bag | pale teal bag, mirrored purple bag
++#dim coral bag | pale teal bag, wavy purple bag, light salmon bag, drab silver bag, dull cyan bag, pale chartreuse bag, muted silver bag, dull gray bag
++#bright tomato bag | dull lime bag, vibrant coral bag, dark turquoise bag, mirrored aqua bag, shiny violet bag, light aqua bag, dotted beige bag, shiny cyan bag, bright fuchsia bag, striped fuchsia bag
++#dim magenta bag | dull lime bag, clear tan bag, muted tan bag, muted chartreuse bag, dim brown bag, muted blue bag, bright purple bag
++#bright cyan bag | dull lime bag, light black bag, vibrant coral bag, dark bronze bag, dotted magenta bag, vibrant green bag
++#dark teal bag | dull lime bag, muted teal bag, shiny fuchsia bag, clear coral bag, mirrored crimson bag, dark gold bag, mirrored beige bag
++#dark chartreuse bag | dim salmon bag
++#shiny coral bag | faded teal bag, dull plum bag, light olive bag, shiny maroon bag, clear fuchsia bag
++#dark turquoise bag | faded teal bag, dark lavender bag, dark indigo bag, dark maroon bag
++#wavy black bag | faded teal bag, light gold bag
++#clear blue bag | dark green bag, mirrored magenta bag, bright gray bag, shiny lime bag, dull teal bag, clear coral bag, vibrant blue bag
++#vibrant bronze bag | dim black bag, plaid chartreuse bag, striped tan bag
++#faded salmon bag | light yellow bag, posh maroon bag, clear cyan bag, dull violet bag, bright tomato bag, muted salmon bag, clear gold bag, striped cyan bag, light fuchsia bag, dull chartreuse bag, plaid magenta bag
++#muted aqua bag | light yellow bag, shiny gray bag, dim green bag, shiny fuchsia bag, drab magenta bag, pale aqua bag, dull silver bag, shiny gold bag, mirrored tan bag, wavy bronze bag, vibrant chartreuse bag
++#clear green bag | drab brown bag, wavy plum bag, posh lime bag, muted salmon bag, mirrored tomato bag, dim crimson bag, mirrored chartreuse bag, drab black bag, mirrored cyan bag, posh yellow bag, vibrant plum bag, faded plum bag, striped fuchsia bag
++#pale aqua bag | drab brown bag, dark aqua bag, mirrored blue bag
++#vibrant purple bag | dotted tomato bag
++#vibrant tomato bag | dotted tomato bag, wavy purple bag, faded bronze bag, striped olive bag
++#clear lime bag | dotted tomato bag, light lime bag, striped yellow bag, striped blue bag, vibrant chartreuse bag
++#dim gold bag | dotted tomato bag
++#pale brown bag | faded orange bag, dark yellow bag, wavy maroon bag, mirrored tomato bag, bright salmon bag, wavy yellow bag, dotted olive bag
++#striped silver bag | light black bag, light orange bag, muted lavender bag, posh white bag, plaid violet bag
++#muted fuchsia bag | plaid turquoise bag, dull tan bag
++#dull violet bag | plaid turquoise bag, faded brown bag, muted gold bag, dark silver bag, wavy maroon bag, dotted silver bag, vibrant silver bag, mirrored cyan bag, mirrored violet bag, dull silver bag, posh magenta bag
++#wavy blue bag | light lime bag, dim cyan bag, dotted turquoise bag, pale chartreuse bag, dotted white bag, dotted fuchsia bag, muted tomato bag, dim plum bag, drab tan bag, bright bronze bag
++#dotted blue bag | plaid blue bag, muted magenta bag
++#light brown bag | plaid blue bag, clear cyan bag, drab plum bag, plaid brown bag, plaid white bag
++#posh teal bag | plaid blue bag
++#bright lavender bag | vibrant maroon bag, dim violet bag, clear aqua bag, dull gold bag, pale gray bag
++#wavy magenta bag | light orange bag, plaid indigo bag, faded gray bag, posh chartreuse bag, plaid purple bag, pale white bag
++#clear orange bag | light orange bag, striped crimson bag, shiny orange bag, mirrored lime bag, pale orange bag, mirrored silver bag, dark teal bag, striped indigo bag, light purple bag, pale gray bag, dull maroon bag
++#plaid red bag | bright beige bag, plaid indigo bag, vibrant white bag, striped salmon bag
++#dull aqua bag | bright beige bag, posh salmon bag, drab cyan bag, posh white bag, vibrant blue bag, dim turquoise bag
++#bright fuchsia bag | bright beige bag, muted green bag, muted indigo bag, pale plum bag, muted lime bag, clear lavender bag, light aqua bag, clear gold bag, faded cyan bag, light gray bag
++#faded maroon bag | striped crimson bag, light coral bag, dotted fuchsia bag, bright gold bag
++#dull chartreuse bag | striped crimson bag, plaid chartreuse bag, mirrored teal bag, dark silver bag, pale orange bag, light cyan bag, vibrant silver bag, dotted blue bag, mirrored turquoise bag, posh fuchsia bag, dull silver bag, drab aqua bag
++#mirrored red bag | striped crimson bag, dull salmon bag, dark salmon bag, dull teal bag
++#pale plum bag | posh silver bag, drab purple bag
++#light salmon bag | posh silver bag, drab silver bag, drab blue bag, wavy tan bag, faded red bag
++#dark white bag | dull white bag, dotted salmon bag, posh violet bag, vibrant yellow bag
++#clear indigo bag | bright lime bag, clear violet bag, pale indigo bag
++#light lime bag | bright crimson bag
++#vibrant magenta bag | dull lavender bag, posh salmon bag, dull violet bag, wavy maroon bag, drab magenta bag, posh brown bag, dark teal bag, dull gold bag, pale lavender bag, dark crimson bag
++# other bag | pale purple bag, bright chartreuse bag, dim bronze bag, light crimson bag, shiny teal bag, dull olive bag, faded salmon bag, pale brown bag, clear green bag, faded coral bag
++#dotted black bag | dull black bag, posh cyan bag, dark lavender bag, bright brown bag
++#clear lavender bag | shiny salmon bag, drab turquoise bag, faded gray bag, dim blue bag, bright indigo bag, striped cyan bag
++#light crimson bag | shiny salmon bag, wavy plum bag, dull violet bag, muted beige bag, dark teal bag, bright orange bag, mirrored gray bag
++#light gray bag | shiny salmon bag, dark bronze bag, light aqua bag, posh yellow bag, bright tan bag, striped beige bag
++#striped indigo bag | vibrant red bag, posh gold bag, muted fuchsia bag, pale aqua bag, shiny cyan bag, pale indigo bag, pale fuchsia bag
++#vibrant silver bag | vibrant red bag, dotted indigo bag, drab magenta bag, posh plum bag
++#posh purple bag | plaid beige bag, vibrant tomato bag
++#pale bronze bag | plaid beige bag, dark bronze bag, dotted tan bag, posh red bag
++#dotted white bag | plaid beige bag, dim red bag, wavy black bag, pale plum bag, light blue bag
++#wavy salmon bag | striped bronze bag, mirrored maroon bag, posh crimson bag, bright orange bag, faded indigo bag
++#posh fuchsia bag | shiny lavender bag, faded blue bag, dark white bag, bright magenta bag, muted blue bag, drab tan bag, vibrant fuchsia bag
++#dim blue bag | wavy white bag
++#faded silver bag | wavy white bag, muted violet bag, striped maroon bag, shiny black bag
++#shiny silver bag | wavy white bag
++#shiny beige bag | wavy white bag, dotted turquoise bag, faded lime bag
++#muted lavender bag | mirrored teal bag, clear plum bag, muted indigo bag, clear violet bag, striped chartreuse bag, striped aqua bag, wavy green bag, faded cyan bag, light red bag, striped lime bag, faded maroon bag, posh orange bag
++#clear magenta bag | dotted bronze bag, plaid aqua bag, dim lavender bag, dotted silver bag, posh red bag, striped white bag
++#muted silver bag | dotted bronze bag, plaid indigo bag, clear gray bag, faded white bag, dim olive bag
++#shiny fuchsia bag | dim red bag, dim indigo bag, plaid crimson bag, vibrant indigo bag
++#dull white bag | shiny crimson bag, drab orange bag, faded turquoise bag
++#vibrant maroon bag | shiny crimson bag
++#posh cyan bag | faded olive bag, striped turquoise bag, drab lavender bag
++#striped gold bag | mirrored gold bag, muted plum bag, dark salmon bag, vibrant tan bag
++#shiny green bag | dim cyan bag, muted gold bag, light salmon bag, vibrant brown bag, shiny brown bag, faded gold bag, bright fuchsia bag
++#mirrored lime bag | dim cyan bag, vibrant orange bag, vibrant tomato bag, plaid salmon bag, dull brown bag, mirrored maroon bag, vibrant blue bag, vibrant green bag, dotted aqua bag
++#dark plum bag | dim cyan bag, wavy chartreuse bag, pale chartreuse bag, wavy lime bag, dotted lime bag
++#bright chartreuse bag | vibrant orange bag, wavy magenta bag, muted fuchsia bag, vibrant black bag, mirrored red bag, plaid violet bag, shiny coral bag, bright lavender bag
++#pale crimson bag | vibrant orange bag, dull aqua bag, pale plum bag, dotted salmon bag, striped silver bag, clear lavender bag, faded turquoise bag, pale tan bag, dotted lime bag, drab aqua bag
++#muted beige bag | vibrant orange bag, pale lime bag, mirrored tan bag
++#dull olive bag | pale beige bag, shiny gray bag, muted white bag, bright gray bag, plaid silver bag, vibrant teal bag, muted turquoise bag, bright tomato bag, dim crimson bag, mirrored black bag, vibrant salmon bag
++#faded red bag | posh lavender bag, dark yellow bag, wavy black bag, dotted purple bag, dark chartreuse bag
++#wavy maroon bag | posh lavender bag, muted cyan bag
++#dull black bag | plaid teal bag
++#muted tan bag | plaid teal bag, striped blue bag, dull blue bag, striped maroon bag, dark crimson bag, plaid white bag
++#posh salmon bag | wavy red bag
++#light black bag | wavy red bag, drab salmon bag, clear bronze bag
++#drab olive bag | wavy red bag, mirrored lavender bag, vibrant violet bag, plaid plum bag, bright plum bag
++#drab beige bag | wavy red bag, striped gold bag, dark tomato bag, shiny purple bag, bright olive bag
++#bright yellow bag | drab maroon bag
++#light yellow bag | clear tan bag, light coral bag, dark brown bag, muted white bag, drab violet bag, dim coral bag, drab magenta bag, bright gold bag, mirrored tan bag, wavy green bag
++#mirrored indigo bag | clear tan bag
++#dotted olive bag | clear tan bag, striped gold bag, pale magenta bag, shiny green bag, pale white bag, bright purple bag, muted silver bag, striped tomato bag, dark red bag, wavy cyan bag
++#clear crimson bag | striped turquoise bag, vibrant lavender bag
++#bright bronze bag | posh turquoise bag, muted maroon bag, wavy brown bag
++#bright orange bag | posh turquoise bag, striped red bag, dotted violet bag
++#posh yellow bag | dark turquoise bag
++#dull red bag | dark turquoise bag, wavy indigo bag, shiny red bag
++#plaid silver bag | dark turquoise bag, light maroon bag, posh violet bag, drab fuchsia bag, dotted lavender bag
++#wavy bronze bag | posh green bag, wavy fuchsia bag
++#muted gold bag | muted green bag, bright cyan bag, bright indigo bag, dull red bag, plaid black bag
++#light orange bag | muted green bag, mirrored lime bag, shiny turquoise bag
++#pale chartreuse bag | dotted coral bag, drab silver bag, faded blue bag, plaid purple bag, dim maroon bag
++#bright gray bag | bright silver bag, dark tomato bag, light turquoise bag, dotted brown bag
++#pale teal bag | drab chartreuse bag, bright aqua bag, light blue bag, light gold bag, wavy gray bag, mirrored orange bag
++#posh white bag | muted plum bag, muted coral bag
++#bright red bag | muted plum bag, light magenta bag, plaid maroon bag
++#dim beige bag | dark bronze bag, posh tan bag, dim gold bag
++#dark black bag | dim fuchsia bag, drab blue bag, drab purple bag, plaid brown bag, dim gold bag, plaid magenta bag
++#mirrored chartreuse bag | dim fuchsia bag, posh cyan bag, dull crimson bag, mirrored tomato bag, posh gray bag, drab plum bag, striped plum bag, pale crimson bag, bright salmon bag, faded plum bag, dim tomato bag, light indigo bag, dull maroon bag
++#wavy white bag | faded brown bag
++#vibrant fuchsia bag | bright green bag
++#shiny white bag | bright green bag, striped magenta bag, dark chartreuse bag
++#mirrored blue bag | bright green bag, muted tomato bag
++#posh aqua bag | bright green bag, plaid cyan bag, dim chartreuse bag
++#dark coral bag | shiny orange bag, dotted indigo bag
++#bright teal bag | shiny orange bag, faded yellow bag
++#dotted brown bag | shiny orange bag, pale black bag, pale cyan bag
++#shiny gold bag | clear blue bag, bright coral bag, muted cyan bag, pale blue bag, dim maroon bag, light gray bag
++#wavy olive bag | vibrant olive bag, vibrant bronze bag, mirrored crimson bag, wavy green bag
++#striped plum bag | muted gold bag, bright cyan bag, dark brown bag, faded yellow bag, dark magenta bag, clear gold bag, dotted yellow bag, striped brown bag
++#shiny purple bag | plaid aqua bag, plaid plum bag, dark chartreuse bag
++#striped violet bag | plaid aqua bag, striped blue bag, drab teal bag, dull brown bag, shiny gold bag
++#wavy plum bag | vibrant turquoise bag, mirrored lime bag, faded gray bag, dull bronze bag, wavy magenta bag, shiny beige bag, dim coral bag, dim white bag, muted beige bag, faded crimson bag, dotted olive bag, wavy silver bag, bright black bag, striped fuchsia bag, posh bronze bag
++#drab crimson bag | light teal bag
++#drab violet bag | light coral bag, drab yellow bag, clear gray bag, vibrant indigo bag, clear black bag
++#dim crimson bag | bright cyan bag, dotted plum bag, bright tomato bag, wavy violet bag, shiny green bag, plaid orange bag, faded aqua bag, posh fuchsia bag, dim plum bag, dotted beige bag, bright plum bag
++#dull bronze bag | wavy purple bag, clear brown bag, dotted purple bag, mirrored plum bag, muted orange bag
++#pale blue bag | bright white bag, faded black bag, striped gold bag, dotted fuchsia bag, dark salmon bag, dark tomato bag, pale aqua bag, shiny purple bag, bright black bag, striped aqua bag, plaid magenta bag
++#dull indigo bag | clear plum bag, dull yellow bag, bright orange bag
++#vibrant turquoise bag | vibrant tomato bag, pale bronze bag, mirrored brown bag, dull fuchsia bag, striped black bag
++#clear maroon bag | vibrant tomato bag, dim yellow bag, dark purple bag, pale yellow bag, light violet bag, posh plum bag
++#dotted gray bag | muted tan bag, bright gold bag, wavy brown bag
++#plaid orange bag | muted tan bag, striped purple bag
++#pale green bag | muted tan bag, plaid cyan bag, pale tan bag, dotted red bag
++#mirrored tomato bag | dark brown bag, posh black bag, muted aqua bag, wavy fuchsia bag, bright indigo bag, shiny aqua bag, dull indigo bag, dark gray bag, posh blue bag, muted olive bag, faded cyan bag, bright teal bag
++#muted indigo bag | striped yellow bag, shiny beige bag, dotted teal bag, dim violet bag, plaid magenta bag
++#bright black bag | striped yellow bag
++#posh gray bag | posh black bag, posh maroon bag, wavy coral bag, vibrant brown bag, mirrored salmon bag, light blue bag, striped purple bag, wavy indigo bag, shiny magenta bag
++#pale orange bag | wavy black bag, clear coral bag
++#posh violet bag | wavy black bag
++#posh chartreuse bag | bright coral bag, shiny beige bag, dull orange bag
++#light violet bag | posh tomato bag
++#mirrored olive bag | posh tomato bag
++#vibrant gray bag | posh cyan bag, wavy tomato bag, muted turquoise bag, plaid lime bag, striped aqua bag, faded indigo bag, dotted lavender bag, pale maroon bag, faded maroon bag
++#light fuchsia bag | pale silver bag, striped teal bag, dark maroon bag
++#dark red bag | pale silver bag
++#mirrored magenta bag | dotted indigo bag, shiny chartreuse bag, dim lime bag, shiny bronze bag
++#plaid gold bag | dotted indigo bag
++#shiny blue bag | light chartreuse bag
++#drab coral bag | light chartreuse bag, dark gold bag, muted yellow bag
++#drab turquoise bag | light chartreuse bag, plaid gray bag, dark red bag
++#wavy violet bag | pale tomato bag
++#dotted tan bag | pale tomato bag, bright magenta bag, clear turquoise bag
++#drab brown bag | pale tomato bag
++#dim silver bag | muted chartreuse bag
++#dim chartreuse bag | muted chartreuse bag
++#striped green bag | muted chartreuse bag, bright yellow bag, striped brown bag
++#drab aqua bag | dull aqua bag, muted violet bag, dotted teal bag, bright blue bag, drab indigo bag, dim aqua bag, clear bronze bag, wavy cyan bag, pale maroon bag
++#light tan bag | dark lime bag, dotted plum bag, pale cyan bag, dark red bag
++#drab orange bag | dark orange bag, drab turquoise bag, light tan bag, faded yellow bag, faded gold bag
++#dotted chartreuse bag | faded black bag, dull coral bag, muted purple bag, dim silver bag
++#plaid olive bag | faded black bag, clear violet bag, bright maroon bag, mirrored coral bag, dotted maroon bag, wavy gold bag, light purple bag
++#wavy lavender bag | dull purple bag, faded lime bag, vibrant indigo bag, muted blue bag, clear olive bag, pale fuchsia bag
++#pale purple bag | dotted gold bag, vibrant brown bag, muted aqua bag, posh lime bag, mirrored aqua bag, drab bronze bag, muted beige bag, dim crimson bag, vibrant gray bag, dotted beige bag, clear olive bag, shiny white bag, posh purple bag
++#dark olive bag | dotted gold bag
++#wavy beige bag | dotted gold bag
++#mirrored aqua bag | dotted gold bag, dull violet bag, wavy maroon bag, muted aqua bag, shiny cyan bag, posh olive bag, mirrored crimson bag, bright fuchsia bag
++#shiny tomato bag | pale bronze bag, drab turquoise bag, drab lavender bag, mirrored white bag, posh tan bag
++#faded coral bag | bright aqua bag, drab red bag, dim magenta bag, mirrored aqua bag, muted salmon bag, clear tomato bag, striped salmon bag, dim crimson bag, faded plum bag, dim aqua bag, wavy cyan bag, posh bronze bag, vibrant magenta bag, shiny magenta bag
++#clear olive bag | bright aqua bag, plaid fuchsia bag, dotted cyan bag
++#wavy yellow bag | faded beige bag, pale turquoise bag, striped maroon bag, pale lime bag, plaid gray bag, dotted brown bag
++#pale lavender bag | faded beige bag, drab violet bag, mirrored silver bag
++#vibrant coral bag | faded beige bag, dim orange bag, clear magenta bag, dull indigo bag
++#posh bronze bag | light maroon bag, plaid black bag
++#dotted silver bag | light maroon bag, dark olive bag, dotted crimson bag, wavy indigo bag
++#muted teal bag | light maroon bag, dull plum bag, light red bag
++#mirrored maroon bag | posh maroon bag, plaid tan bag, light turquoise bag, dull gray bag
++#posh black bag | posh maroon bag
++#vibrant salmon bag | bright red bag, dark violet bag, shiny bronze bag
++#faded violet bag | vibrant purple bag
++#dotted yellow bag | vibrant crimson bag, light olive bag
++#pale tan bag | vibrant crimson bag, shiny brown bag, faded lavender bag
++#posh turquoise bag | dim green bag, dull plum bag, dull teal bag, faded red bag
++#striped fuchsia bag | striped gray bag, pale green bag, dotted white bag, plaid lime bag, striped indigo bag, dark olive bag, light gray bag
++#striped beige bag | light salmon bag, clear cyan bag, dull cyan bag, dotted white bag, vibrant yellow bag, pale salmon bag, dim maroon bag, shiny plum bag
++#dim maroon bag | bright violet bag
++#dark tan bag | bright violet bag
++#drab purple bag | bright violet bag, wavy violet bag
++#posh red bag | muted violet bag, dotted teal bag, light aqua bag, dull green bag, shiny plum bag
++#dull maroon bag | dull salmon bag, striped green bag
++#dim turquoise bag | posh aqua bag, dull magenta bag, dark gray bag, plaid green bag
++#drab green bag | posh aqua bag, light olive bag
++#striped red bag | posh aqua bag, mirrored orange bag
++#pale yellow bag | muted white bag, posh teal bag, muted cyan bag, dotted teal bag, posh tan bag
++#faded purple bag | wavy coral bag, clear yellow bag, pale yellow bag, plaid lavender bag, drab purple bag, clear purple bag, pale lavender bag, plaid maroon bag, bright lavender bag
++#dark tomato bag | wavy coral bag, pale lime bag, faded white bag, shiny red bag
++#mirrored violet bag | dotted plum bag, clear violet bag, bright indigo bag, pale lavender bag
++#mirrored fuchsia bag | dotted plum bag, clear teal bag, clear black bag, pale salmon bag, clear red bag
++#muted lime bag | mirrored purple bag, mirrored yellow bag, faded lavender bag
++#mirrored teal bag | mirrored purple bag
++#striped orange bag | drab yellow bag, pale coral bag, posh crimson bag
++#bright crimson bag | drab red bag, light green bag
++#dim gray bag | muted red bag, mirrored fuchsia bag, clear aqua bag, plaid gray bag, faded fuchsia bag
++#muted purple bag | clear cyan bag, drab cyan bag, drab lime bag
++#clear yellow bag | plaid cyan bag, shiny blue bag, dim tan bag
++#shiny gray bag | plaid cyan bag, wavy tan bag, drab cyan bag, striped indigo bag, shiny chartreuse bag, light fuchsia bag
++#faded lime bag | clear brown bag, dim white bag, mirrored silver bag, muted coral bag
++#clear bronze bag | clear brown bag, plaid brown bag
++#light bronze bag | light tan bag, muted magenta bag
++#pale fuchsia bag | muted black bag, muted blue bag, muted maroon bag
++#bright maroon bag | muted black bag
++#striped lavender bag | muted black bag, dull tomato bag
++#vibrant blue bag | dark aqua bag, striped gold bag, striped salmon bag, clear fuchsia bag
++#drab blue bag | dim lavender bag, faded silver bag, posh blue bag
++#plaid lime bag | bright gray bag, clear yellow bag, dull tomato bag, mirrored white bag, dull indigo bag, faded green bag
++#faded yellow bag | mirrored bronze bag
++#vibrant black bag | plaid silver bag, dotted white bag, posh lime bag, mirrored aqua bag, clear magenta bag, vibrant gray bag, striped indigo bag, wavy salmon bag, light purple bag, dull chartreuse bag, bright fuchsia bag, shiny coral bag
++#clear coral bag | dim yellow bag, dim white bag, dull red bag
++#plaid magenta bag | drab orange bag, clear turquoise bag, posh purple bag, bright brown bag, bright teal bag
++#dull lavender bag | drab orange bag, drab tomato bag, striped white bag, dull gold bag, clear white bag, clear beige bag
++#dim cyan bag | drab orange bag, plaid coral bag, dark white bag
++#wavy crimson bag | wavy turquoise bag
++#posh plum bag | wavy turquoise bag
++#faded turquoise bag | wavy turquoise bag, pale black bag
++#clear violet bag | clear yellow bag, muted gray bag, dull maroon bag, dim silver bag, bright bronze bag
++#vibrant orange bag | muted crimson bag, dotted gray bag, posh fuchsia bag
++#posh orange bag | dull cyan bag
++#bright lime bag | shiny fuchsia bag
++#faded indigo bag | shiny fuchsia bag, mirrored coral bag, clear silver bag, shiny coral bag
++#plaid tan bag | shiny tan bag
++#dotted lavender bag | dull bronze bag, drab tan bag, dim gold bag, posh blue bag, clear chartreuse bag, muted maroon bag
++#clear silver bag | dim blue bag
++#muted blue bag | dim blue bag, vibrant tan bag, faded tomato bag
++#drab gray bag | plaid coral bag, faded turquoise bag, pale cyan bag, dull coral bag
++#dark orange bag | plaid coral bag
++#dim fuchsia bag | striped coral bag
++#vibrant yellow bag | striped coral bag, pale red bag, mirrored cyan bag, clear olive bag
++#mirrored turquoise bag | striped coral bag, mirrored crimson bag, dark indigo bag, shiny plum bag
++#wavy gray bag | dark beige bag, light gold bag, posh magenta bag
++#muted olive bag | plaid red bag, vibrant teal bag, drab green bag, drab blue bag, drab teal bag, dull beige bag, plaid fuchsia bag, dull gray bag
++#dark silver bag | plaid red bag
++#dark green bag | dark purple bag, faded green bag
++#vibrant white bag | dull yellow bag, plaid gold bag
++#dotted teal bag | dull yellow bag, shiny indigo bag, dim tan bag
++#dark violet bag | faded magenta bag, dotted violet bag
++#light indigo bag | faded magenta bag
++#plaid indigo bag | faded blue bag
++#posh gold bag | dark coral bag, pale fuchsia bag
++#dim lime bag | dark coral bag, drab coral bag, drab olive bag
++#faded cyan bag | drab gold bag, plaid orange bag
++#dim green bag | dotted green bag, plaid black bag, mirrored orange bag
++#wavy red bag | dotted green bag
++#vibrant red bag | mirrored olive bag, dim beige bag, drab teal bag, dull beige bag, dull red bag, muted maroon bag
++#dim violet bag | muted lime bag, clear silver bag, dark olive bag, clear crimson bag, posh orange bag
++#plaid fuchsia bag | pale violet bag, vibrant lime bag
++#dotted beige bag | wavy lime bag, wavy tan bag, plaid purple bag, dim aqua bag, dark red bag
++#mirrored beige bag | dotted salmon bag
++#dark brown bag | vibrant white bag, wavy blue bag, plaid olive bag, shiny chartreuse bag, light brown bag
++#dotted lime bag | vibrant white bag, bright teal bag, dim olive bag
++#plaid violet bag | muted brown bag, muted turquoise bag, shiny purple bag, clear white bag, bright orange bag
++#plaid bronze bag | striped red bag
++#shiny aqua bag | vibrant teal bag, mirrored brown bag
++#pale violet bag | light gold bag
++#shiny magenta bag | posh violet bag, striped salmon bag
++#clear turquoise bag | dull tomato bag, faded lavender bag
++#dull lime bag | dull tomato bag, dim purple bag, mirrored indigo bag
++#vibrant beige bag | dull blue bag
++#drab salmon bag | light magenta bag, muted yellow bag
++#drab fuchsia bag | light beige bag, plaid brown bag
++#shiny cyan bag | muted fuchsia bag, dull crimson bag, vibrant violet bag, posh olive bag
++#vibrant brown bag | muted gray bag, shiny brown bag
++#dark indigo bag | bright maroon bag
++#muted brown bag | drab crimson bag, striped brown bag
++#faded fuchsia bag | drab crimson bag, drab coral bag
++#dull silver bag | muted turquoise bag, pale blue bag, clear lime bag, clear olive bag, muted orange bag
++#vibrant lime bag | light lavender bag, light olive bag, faded crimson bag, wavy crimson bag
++#light coral bag | light lavender bag, dotted red bag
++#dim olive bag | striped maroon bag
++#bright olive bag | shiny olive bag
++#muted white bag | plaid lime bag, dotted lime bag, dotted orange bag
++#striped salmon bag | faded yellow bag
++#shiny teal bag | dark tomato bag, dull crimson bag, dull green bag, plaid purple bag, striped cyan bag, plaid yellow bag, vibrant plum bag, striped beige bag
++#muted red bag | pale coral bag
++#muted crimson bag | faded turquoise bag
++#dark blue bag | pale gold bag, mirrored brown bag, faded gold bag
++#dull crimson bag | muted tomato bag, dark olive bag
++#dotted salmon bag | wavy beige bag, wavy gold bag, striped olive bag, dark chartreuse bag
++#posh olive bag | dotted violet bag, dotted lime bag, dull brown bag, bright brown bag
++#shiny red bag | mirrored yellow bag, pale maroon bag
++#bright white bag | plaid salmon bag, dim violet bag, light red bag, muted purple bag
++#faded tomato bag | pale black bag, striped black bag, vibrant fuchsia bag
++#pale beige bag | pale red bag, light white bag
++#muted turquoise bag | shiny tomato bag
++#pale olive bag | bright turquoise bag, mirrored plum bag
++#shiny plum bag | pale aqua bag, striped purple bag, dark maroon bag
++#posh tan bag | shiny indigo bag, bright purple bag
++#dull brown bag | dark magenta bag
++#wavy tan bag | dark magenta bag, pale maroon bag
++#faded olive bag | dark magenta bag, dim teal bag, dull turquoise bag
++#drab white bag | wavy violet bag
++#shiny lavender bag | shiny purple bag
++#wavy purple bag | plaid lavender bag
++#plaid salmon bag | dark violet bag, dark tan bag, vibrant fuchsia bag
++#clear white bag | dotted blue bag
++#light cyan bag | dotted blue bag, plaid green bag
++#wavy teal bag | wavy aqua bag, shiny lime bag
++#muted maroon bag | wavy aqua bag, plaid tan bag, dotted brown bag
++#plaid blue bag | wavy aqua bag, muted coral bag
++#wavy cyan bag | mirrored maroon bag, mirrored indigo bag, vibrant aqua bag
++#bright plum bag | clear salmon bag
++#light beige bag | clear salmon bag
++#plaid aqua bag | clear salmon bag
++#muted violet bag | bright yellow bag, vibrant lavender bag
++#dull blue bag | light violet bag
++#posh blue bag | drab coral bag
++#shiny turquoise bag | drab coral bag, drab purple bag
++#vibrant teal bag | plaid bronze bag, posh indigo bag
++#dull tan bag | dull magenta bag, wavy gold bag
++#dotted tomato bag | shiny maroon bag
++#bright purple bag | faded bronze bag, clear coral bag, plaid maroon bag
++#dull gray bag | dark blue bag, vibrant indigo bag, vibrant tan bag, wavy gray bag
++#dotted plum bag | dim teal bag
++#dotted orange bag | dim teal bag
++#vibrant violet bag | faded crimson bag
++#wavy coral bag | faded crimson bag, dotted yellow bag
++#striped purple bag | dotted black bag
++#dull gold bag | mirrored indigo bag, dotted beige bag
++#pale lime bag | mirrored lavender bag
++#wavy green bag | mirrored lavender bag
++#faded teal bag | drab lime bag
++#drab teal bag | wavy gold bag, plaid green bag
++#plaid white bag | striped chartreuse bag
++#light plum bag | mirrored brown bag, vibrant gold bag, bright olive bag
++#dull cyan bag | posh crimson bag, mirrored green bag, dotted magenta bag, mirrored gray bag
++#dark yellow bag | bright gold bag
++#clear black bag | light silver bag
++#dotted crimson bag | shiny yellow bag
++#drab tan bag | faded violet bag, drab fuchsia bag, dotted tan bag, pale indigo bag
++#drab black bag | dull teal bag, muted purple bag
++#clear brown bag | clear teal bag, wavy indigo bag
++#mirrored black bag | drab fuchsia bag, dim plum bag, faded chartreuse bag, dull maroon bag
++#faded bronze bag | faded red bag
++#shiny brown bag | posh plum bag
++#bright beige bag | posh plum bag
++#wavy fuchsia bag | dark cyan bag
++#posh beige bag | dark cyan bag
++#plaid purple bag | mirrored plum bag, striped olive bag
++#faded brown bag | clear fuchsia bag
++#posh silver bag | clear fuchsia bag, posh coral bag
++#clear tan bag | clear aqua bag, shiny red bag
++#dim tan bag | light green bag
++#shiny chartreuse bag | light green bag
++#dotted magenta bag | dim plum bag
++#vibrant lavender bag | drab indigo bag
++#bright silver bag | vibrant salmon bag, shiny chartreuse bag
++#posh maroon bag | dim tan bag, vibrant fuchsia bag
++#pale gray bag | pale salmon bag, drab gray bag, dark plum bag
++#mirrored gold bag | light white bag
++#vibrant aqua bag | posh indigo bag, pale cyan bag
++#shiny violet bag | bright tan bag
++#faded black bag | pale olive bag
++#dim aqua bag | pale olive bag
++#mirrored crimson bag | striped purple bag
++#bright turquoise bag | vibrant tan bag
++#striped aqua bag | dark crimson bag, wavy crimson bag, posh orange bag
++#dull green bag | dotted red bag, wavy orange bag
++#pale tomato bag | dotted red bag
++#clear aqua bag | faded chartreuse bag
++#striped coral bag | faded chartreuse bag
++#drab tomato bag | posh blue bag, clear crimson bag
++#vibrant olive bag | faded green bag, posh coral bag
++#shiny lime bag | faded green bag
++#bright coral bag | bright black bag
++#light blue bag | wavy gray bag
++#dotted maroon bag | wavy crimson bag
++#pale indigo bag | wavy crimson bag
++#plaid beige bag | dim lime bag
++#mirrored tan bag | vibrant green bag
++#dotted bronze bag | striped brown bag
++#dotted indigo bag | dim olive bag
++#wavy orange bag | plaid black bag
++#dotted fuchsia bag | light red bag
++#light aqua bag | shiny bronze bag
++#drab plum bag | shiny bronze bag, mirrored orange bag
++#muted bronze bag | striped black bag
++#mirrored white bag | clear crimson bag
++#mirrored silver bag | light turquoise bag
++#striped gray bag | muted orange bag, dotted orange bag
++#dark fuchsia bag | clear red bag
++#light lavender bag | wavy orange bag
++#clear red bag | dim silver bag
+diff --git a/PythonApplication1/pygameA.py b/PythonApplication1/pygameA.py
+deleted file mode 100644
+index f4ab1a4..0000000
+--- a/PythonApplication1/pygameA.py
++++ /dev/null
+@@ -1,150 +0,0 @@
+-# All the code used in this tutorial
+-# For your reference, here is all the code used in this series of articles so far.
+-
+-#!/usr/bin/env python3
+-# by Seth Kenlon
+-
+-# GPLv3
+-# This program is free software: you can redistribute it and/or
+-# modify it under the terms of the GNU General Public License as
+-# published by the Free Software Foundation, either version 3 of the
+-# License, or (at your option) any later version.
+-#
+-# This program is distributed in the hope that it will be useful, but
+-# WITHOUT ANY WARRANTY; without even the implied warranty of
+-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+-# General Public License for more details.
+-#
+-# You should have received a copy of the GNU General Public License
+-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-from typing import Tuple
+-
+-import pygame as fc
+-import sys
+-import os
+-
+-'''
+-Variables
+-'''
+-
+-worldx = 960
+-worldy = 720
+-fps = 40
+-ani = 4
+-world = fc.display.set_mode([worldx, worldy])
+-
+-BLUE = (25, 25, 200)
+-BLACK = (23, 23, 23)
+-WHITE = (254, 254, 254)
+-ALPHA = (0, 255, 0)
+-
+-'''
+-Objects
+-'''
+-
+-
+-class Player(fc.sprite.Sprite):
+-    """
+-    Spawn a player
+-    """
+-
+-    def __init__(self):
+-        #pygame.
+-        fc.sprite.Sprite.__init__(self)
+-        self.movex = 0
+-        self.movey = 0
+-        self.frame = 0
+-        self.images = []
+-        for i in range(1, 5):
+-            img = fc.image.load(os.path.join('images', 'hero' + str(i) + '.png')).convert()
+-            img.convert_alpha()  # optimise alpha
+-            img.set_colorkey(ALPHA)  # set alpha
+-            self.images.append(img)
+-            self.image = self.images[0]
+-            self.rect = self.image.get_rect()
+-
+-    def control(self, x, y):
+-        """
+-        control player movement
+-        """
+-        self.movex += x
+-        self.movey += y
+-
+-    def update(self):
+-        """
+-        Update sprite position
+-        """
+-
+-        self.rect.x = self.rect.x + self.movex
+-        self.rect.y = self.rect.y + self.movey
+-
+-        # moving left
+-        if self.movex < 0:
+-            self.frame += 1
+-            if self.frame > 3*ani:
+-                self.frame = 0
+-            self.image = fc.transform.flip(self.images[self.frame // ani], True, False)
+-
+-        # moving right
+-        if self.movex > 0:
+-            self.frame += 1
+-            if self.frame > 3*ani:
+-                self.frame = 0
+-            self.image = self.images[self.frame//ani]
+-
+-
+-'''
+-Setup
+-'''
+-
+-backdrop = fc.image.load(os.path.join('images', 'stage.png'))
+-clock = fc.time.Clock()
+-fc.init()
+-backdropbox = world.get_rect()
+-main = True
+-
+-player = Player()  # spawn player
+-player.rect.x = 0  # go to x
+-player.rect.y = 0  # go to y
+-player_list = fc.sprite.Group()
+-player_list.add(player)
+-steps = 10
+-
+-'''
+-Main Loop
+-'''
+-
+-while main:
+-    for event in fc.event.get():
+-        if event.type == fc.QUIT:
+-            fc.quit()
+-            try:
+-                sys.exit()
+-            finally:
+-                main = False
+-
+-        if event.type == fc.KEYDOWN:
+-            if event.key == ord('q'):
+-                fc.quit()
+-                try:
+-                    sys.exit()
+-                finally:
+-                    main = False
+-            if event.key == fc.K_LEFT or event.key == ord('a'):
+-                player.control(-steps, 0)
+-            if event.key == fc.K_RIGHT or event.key == ord('d'):
+-                player.control(steps, 0)
+-            if event.key == fc.K_UP or event.key == ord('w'):
+-                print('jump')
+-
+-        if event.type == fc.KEYUP:
+-            if event.key == fc.K_LEFT or event.key == ord('a'):
+-                player.control(steps, 0)
+-            if event.key == fc.K_RIGHT or event.key == ord('d'):
+-                player.control(-steps, 0)
+-
+-    world.blit(backdrop, backdropbox)
+-    player.update()
+-    player_list.draw(world)
+-    fc.display.flip()
+-    clock.tick(fps)
+\ No newline at end of file
