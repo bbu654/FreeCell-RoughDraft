@@ -49,11 +49,11 @@ class PrintItBBU(object):
             tabloDC.isdirty = self.isdirty
             tabloDC.sbckN4h = copy.deepcopy(self.sbckN4h)
             tabloDC.ogtablo = copy.deepcopy(self.ogtablo)
-            tabloDC.reason  = copy.deepcopy(self.reason)
-            tabloDC.posdic  = copy.deepcopy(self.posdic)
+            #tabloDC.reason  = copy.deepcopy(self.reason)
+            #tabloDC.posdic  = copy.deepcopy(self.posdic)
             tabloDC.tablow  = copy.deepcopy(self.tablown)
     # rp    (f'{nextCard}',sep=' ',end='')rp(f'{nextCard}',sep=' ',end='')
-    def printTableau(self, tabloDC=None):
+    def printTableau(self, tabloDC=None, reason=[]):
         if tabloDC != None:
             gameview = Table(title='New Freecell')
             cc=['','','','','','','','']
@@ -198,7 +198,7 @@ class SQLiteIO(object):
                 elif idxGamem>2:
                     self.lTblRows.append(mfield)
 
-    def insertTablow(self,tablow,gameid,moveid)  ->  Tableau:
+    def insertTablow(self,tablow,gameid,moveid):
         """ self.fieldNames4games[:10]=['dbid', 'gameid', 'moveid', 
         'row0', 'row1', 'row2', 'row3', 'row4', 'row5', 
         'row6']||||self.row0Index=3"""
@@ -423,7 +423,7 @@ class SQLiteIO(object):
         newtablowDC.tablow,self.gameid,self.moveid = self.insertTablow(newtablowDC.tablow,self.gameid,self.moveid)
         if self.moveid == self.maxmoveid+1: 
             self.maxmoveid += 1
-        self.brichp1.printTableau(newtablowDC.tablow,newtablowDC.reason)                    
+        self.brichp1.printTableau(newtablowDC.tablow,reason)                    
         self.newGameFlag=False
 
 

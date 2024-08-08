@@ -43,7 +43,8 @@ class PrintItBBU(object):
         #return tablow
         if reason != None:
             if len(reason) > 1:
-                rp(f'{[ti for ti in reason[1:]]}',sep='')
+                errmsg = ''.join(str(te) for te in reason[1:])
+                #rp(f'{[ti for ti in reason[1:]]}',sep='')
     def printSQLRow(self, sqlrow):
         outa=[]
         for rowa in sqlrow[3:]:
@@ -126,10 +127,23 @@ class PrintItBBU(object):
         self.printTableau(tablow)        
         return tablow
 
-    def getAnswer(self,question = f'{CENTERSPACES}card, dest|FF,GG,Q: '):
-        answer = input(question)
+    def getAnswer(self,question = f'card, dest|FF,GG,Q: ',reason=[]):
+        #answer = input(question)
+        try: 
+            global errmsg
+            if reason != []:
+                errmsg = errmsg + ''.join(str(zz) for zz in reason)
+            if len(errmsg) > 1: pass
+        except: errmsg=''
+        validAnswer=False#; errmsg=''
+        while not validAnswer:
+            strquestion = f'{errmsg: ^40}{question}'
+            if errmsg !='':                    #strreason= ' '.join(errmsg)
+                errmsg=''
+            validAnswer, answer, errmsg = rule.getValidAnswer(input(f'{strquestion}'))
+            
+        
         return answer
-    
 class SQLiteIO(object):
     xGamesFields=[	"dbid",	 "gameid", "solved", "test", "currentgameid",
                     "row0",  "row1",   "row2",	 "row3",	 "row4",  "row5",  "row6",
@@ -311,8 +325,9 @@ class SQLiteIO(object):
                 self.rowstring += f"'{str(rowf)}', "
                 self.valuestr  += f"'{snames[idx+srowidx]}', "    '''
         sqld = f"{self.valuestr} VALUES {self.SQLvalues}"
-        self.allMoveSQLFwdBack.append(self.SQLvalues)          
-        print(f'{sqld=}',sep=',')
+        self.allMoveSQLFwdBack.append(self.SQLvalues)  
+        if self.dontchgmoveid:  rp(f'{sqld=}',sep=',')
+        else:                print(f'{sqld=}',sep=',')
         return sqld, tablow
     
 
@@ -415,7 +430,7 @@ class SQLiteIO(object):
         self.rmpmid        = self.moveid
         tablow, self.gameid, self.moveid = self.insertTablow(tablow,self.gameid,tempmoveid,self.dontchgmoveid)
         self.moveid        = self.rmpmid
-
+        self.dontchgmoveid = False
 
 
     def closeconn(self):

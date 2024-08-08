@@ -50,32 +50,32 @@ class Rules(object):
         self.posdic={k:[-1,-1] for k in validcard}        
 
     def getValidAnswer(self, answer):
-        self.validAnswer = True; lenAnswer = len(answer);self.reason=''
+        self.validAnswer = True; lenAnswer = len(answer);errmsg=''
         if lenAnswer > 0:    
             answer = ''.join(answer[i].upper() if str(answer[i]).isalpha() else answer[i] for i in range(lenAnswer) )
         if lenAnswer < 1 or lenAnswer > 4:
             self.validAnswer = False
-            self.reason +=(f"{answer} 2 long/short")
+            errmsg +=(f"{answer} 2 long/short")
         elif lenAnswer == 1:
             answer = str(answer).upper()  if str(answer).isalpha() else answer
             if answer not in ['N','R','W','Q']:
                 self.validAnswer = False
-                self.reason +=(f"{answer} !in NRWQ")
-        elif lenAnswer > 1 or lenAnswer < 4:
+                errmsg +=(f"{answer} !in NRWQ")
+        elif lenAnswer > 1 and lenAnswer < 4:
             if answer[0] not in ['B', 'F']:
                 self.validAnswer = False
-                self.reason +=(f"{answer} ! B/F")
+                errmsg +=(f"{answer} ! B/F")
         elif lenAnswer in range(4,6):
             if answer[:2] not in validcard:
                 self.validAnswer = False
-                self.reason +=(f"{answer} 1st2 ! Card")
-            elif answer[-1] not in ['F', 'G', 'Z'] or \
+                errmsg +=(f"{answer} 1st2 ! Card")
+            elif answer[-1] not in ['F', 'G', 'Z'] and \
                  answer[-2:] not in validcard:# or last2     \
                  #self.noFoundationAsMover(Tableau.tablown,answer[-2:]):
                  self.validAnswer = False
-                 self.reason +=(f"{answer} 1st2 ! Card")
+                 errmsg +=(f"{answer} 1st2 ! Card")
 
-        return self.validAnswer, answer, self.reason
+        return self.validAnswer, answer, errmsg
 
     '''
     
@@ -125,7 +125,8 @@ class Rules(object):
 
 
     def noFoundationAsMover(self, tablow, minp):
-        self.moveing = True
+        self.moveing = True; global errmsg
+        if len(errmsg) < 1: errmsg=''
         #try:
         
         if minp[1] in vsuita:
@@ -137,10 +138,11 @@ class Rules(object):
                 #svr=self.validrank
             elif minp in str(tablow[0][suitminp]) or \
                 validrank.index(minp[0]) < validrank.index(str(tablow[0][suitminp])[0]): 
-                print(f'CANT MOVE{str(tablow[0][suitminp])} FROM FOUNDATION!!!!{validrank.index(minp[0])=} < {validrank.index(str(tablow[0][suitminp])[0])=}{str(tablow[0][suitminp])=}')    
+                errmsg=f"CANT MOVE '{str(tablow[0][suitminp])}' FROM FOUNDATION!!!!"# Indexes{validrank.index(minp[0])} < {validrank.index(str(tablow[0][suitminp])[0])}"
                 self.moveing = False
         else:
             self.moveing = False
+        return errmsg
         #except:
         #    self.moveing = False#;self.noAbend=True;self.validMove=False
         #return self.moveing, self.noAbend, self.validMove

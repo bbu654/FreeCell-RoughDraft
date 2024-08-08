@@ -5,6 +5,7 @@ from fc_io_mine    import PrintItBBU as printclass
 from fc_io_mine    import SQLiteIO as sql3cls
 from contextlib    import closing
 from fc_game_mine  import Game as game
+from fc_rules_mine import Rules 
 #conn = sqlite3.connect(location)
 
 
@@ -15,33 +16,32 @@ from fc_game_mine  import Game as game
 prtit =printclass()
 deckA=deck()
 sql3class=sql3cls()
-deckA.shuffle();#self=0
-#realdeal
+deckA.shuffle();    #self=0    #realdeal
+rules = Rules()
+def putUpLastRowsOfCards( running, dek, tablow, idx4lastcards, rowidx):
+    '''we might not need idxlastcards'''
+    for column in range(8):
+        if idx4lastcards[column] > -1 and tablow[rowidx][column]!='0':
+            reason=rules.validLastRowsOfCards(tablow, rowidx, column)
+            if rules.validMove:
+                pass
 
-#def putUpLastRowsOfCards( running, dek, tablow, idx4lastcards, rowidx):
-#    '''we might not need idxlastcards'''
-#    for column in range(8):
-#        if idx4lastcards[column] > -1 and tablow[rowidx][column]!='0':
-#            reason=rules.validLastRowsOfCards(tablow, rowidx, column)
-#            if rules.validMove:
-#                pass
-#
-#    pass
-#    return running, dek, tablow
-#
-#def testhandleWeWon(self, running, dek,tablow):
-#    strtemp='0';lentablow=len(tablow)
-#    for errchk in range(4):
-#        if type(tablow[0][errchk]) != type(strtemp):
-#            return False, dek, tablow
-#    #############################################
-#    #running, dek, tablow, idx4lastcards, maxidxoflc = getidx4lastcards(\
-#    #running, dek, tablow)
-#    maxidxoflc+=1
-#    for rowidx in range(maxidxoflc,1,-1):
-#        running, dek, tablow = putUpLastRowsOfCards(\
-#        running, dek, tablow, idx4lastcards, rowidx)
-#    return running, dek,tablow
+    pass
+    return running, dek, tablow
+
+def testhandleWeWon(self, running, dek,tablow):
+    strtemp='0';lentablow=len(tablow)
+    for errchk in range(4):
+        if type(tablow[0][errchk]) != type(strtemp):
+            return False, dek, tablow
+    #############################################
+    #running, dek, tablow, idx4lastcards, maxidxoflc = getidx4lastcards(\
+    #running, dek, tablow)
+    maxidxoflc+=1
+    for rowidx in range(maxidxoflc,1,-1):
+        running, dek, tablow = putUpLastRowsOfCards(\
+        running, dek, tablow, idx4lastcards, rowidx)
+    return running, dek,tablow
 def restartfromdb():
     #with closing(sql3class.cursorSQL3) as cursor3:
     gamer=game()

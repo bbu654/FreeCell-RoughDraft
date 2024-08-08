@@ -33,7 +33,7 @@ class Game(object):
     def runit(self,running,dek,tablow=None):
         if running:
             self.dek=dek
-            if tablow==None:  #prevent abend
+            if tablow==None or tablow == []:  #prevent abend
                 running, dek, tablow = self.tablClass.handle_Re_Start(running)
             elif tablow[1] == ['0','0','0','0','0','0','0','0']:
                 running, dek, tablow = self.tablClass.handle_Re_Start(running)
@@ -223,3 +223,26 @@ nonlocalsqlr="INSERT INTO Game  (gameid, moveid, row0, row1, row2, row3, row4, r
 
 # Rules.noFoundationAsMover() missing 1 required 
 # positional argument: 'minp'
+productionize= f'https://developer.android.com/studio/publish/preparing#:~:text=Configure%20your%20app%20for%20release%201%20Choose%20a,URLs%20for%20servers%20and%20services%20...%20More%20items'
+'''Break down the code Always limit tasks to their specific functions. ...
+Start Using a Proper IDE ...
+Group Files on the Basis of Tasks/Steps ...
+Use config.Py for All Your Directories ...
+Use Blueprints for Flask ...
+Try to Optimize Your Code As Much As Possible ...
+Logging Critical Failures and Intermediate Results ...
+Handle Possible Errors in the Code ...'''
+
+
+
+                             #
+                             # 
+                             # 
+                             # 1└────┴────┴────┴────┴────┴────┴────┴────
+'''card, dest|FF,GG,Q: z
+               Z !in NRWQ               card, dest|FF,GG,Q: 
+                                        card, dest|FF,GG,Q: 
+                                        card, dest|FF,GG,Q: z
+               Z !in NRWQ               card, dest|FF,GG,Q: 44444
+                                        card, dest|FF,GG,Q: z
+               Z !in NRWQ               card, dest|FF,GG,Q: '''

@@ -16,7 +16,7 @@ k=0
 CENTERSPACES=' '*40
 # List to map int rank to printable character (index 0 used for no rank)
 rank_list = ['_','A','2','3','4','5','6','7','8','9','T','J','Q','K']
-
+errmsg = ''
 # List to map int suit to printable character (index 0 used for no suit)
 # 1 is clubs, 2 is diamonds, 3 is hearts, and 4 is spades
 #suit_list = ['x','\u2663','\u2666','\u2665','\u2660']

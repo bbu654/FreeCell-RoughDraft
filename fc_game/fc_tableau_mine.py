@@ -224,7 +224,40 @@ class Tableau(Tableau_dataclass):
                 if first0Col == -1:
                     first0Col = idc
         return blankcolumns, first0Col
-    
+
+    def FFCard(self, minp):
+        moapt=0,0;doapt=0,0
+        if minp[1] in list(SYMBOL.keys()):
+            numOf0InFC, first0InFC = self.findNoOf0FC()
+            if first0InFC > -1:
+                moapt, doapt = self.getCardLocation(minp, 'dinp')
+                doapt = [0,first0InFC]#; mou=0; moo=0
+                if str(self.tablown[moapt[0]+1][moapt[1]]) != BLANKCARD and\
+                                    moapt[0] != 0:
+                    self.moveing = False
+                    self.reasonx.append('moapt+1!BLANK')
+                elif self.moveing:
+                    self.moveCCCard(moapt, doapt, f_or_gf=True)
+                '''
+                mou,moo=card(card.rank_list.index(minp[0]),card.suit_list.index(minp[1])).get_position()
+                newCard=card(mou,moo).set_position(0,first0InFC)
+                self.tablown[0][first0InFC]=newCard
+                for ii,qq in enumerate(self.tablown):# if minp in qq else 0]
+                    rr=[str(ss) for ss in qq]
+                    if minp in rr: 
+                        mou=ii; moo=rr.index(minp);moapt=mou,moo
+                        self.posdictNEtablo(minp, mou, moo, moapt)
+                        self.tablown[doapt[0]][doapt[1]]=self.tablown[mou][moo]
+                        self.tablown[mou][moo]=BLANKCARD
+                        self.posdict.update({minp:[0,first0InFC]})
+                        break'''
+            else:
+                self.moveing = False
+        else:
+            self.moveing = False
+
+           # moapt,doapt
+
     def GGCard(self, minp):
         #self.validGG=False
         listsuit=list(SYMBOL.keys())
@@ -241,6 +274,11 @@ class Tableau(Tableau_dataclass):
                 if moapt[0] == 0 and moapt[1] in range(4,8):
                     self.moveing = False
                     self.reasonx.append('moapt=foundation')
+                #valid 0-4 or +1 blank
+                elif str(self.tablown[moapt[0]+1][moapt[1]]) != BLANKCARD and\
+                                      moapt[0] != 0:
+                    self.moveing = False
+                    self.reasonx.append('moapt+1!BLANK')
                 elif self.moveing:
                     self.moveCCCard(moapt, doapt, f_or_gf=True)
                 '''
@@ -267,34 +305,6 @@ class Tableau(Tableau_dataclass):
                 self.tablown[0][foundation] = card(card.rank_list.index(minp[0]),card.suit_list.index(minp[1]),0,foundation)
                 self.posdict.update({minp:[0,foundation]})'''#self.validGG=True
         
-    def FFCard(self, minp):
-        moapt=0,0;doapt=0,0
-        if minp[1] in list(SYMBOL.keys()):
-            numOf0InFC, first0InFC = self.findNoOf0FC()
-            if first0InFC > -1:
-                moapt, doapt = self.getCardLocation(minp, 'dinp')
-                doapt = [0,first0InFC]#; mou=0; moo=0
-                self.moveCCCard(moapt, doapt, f_or_gf=True)
-                '''
-                mou,moo=card(card.rank_list.index(minp[0]),card.suit_list.index(minp[1])).get_position()
-                newCard=card(mou,moo).set_position(0,first0InFC)
-                self.tablown[0][first0InFC]=newCard
-                for ii,qq in enumerate(self.tablown):# if minp in qq else 0]
-                    rr=[str(ss) for ss in qq]
-                    if minp in rr: 
-                        mou=ii; moo=rr.index(minp);moapt=mou,moo
-                        self.posdictNEtablo(minp, mou, moo, moapt)
-                        self.tablown[doapt[0]][doapt[1]]=self.tablown[mou][moo]
-                        self.tablown[mou][moo]=BLANKCARD
-                        self.posdict.update({minp:[0,first0InFC]})
-                        break'''
-            else:
-                self.moveing = False
-        else:
-            self.moveing = False
-
-           # moapt,doapt
-    
     def ZZCard(self, minp):
         moapt=0,0;doapt=0,0        #nofoundation
         if minp[1] in list(SYMBOL.keys()):
@@ -331,7 +341,7 @@ class Tableau(Tableau_dataclass):
     
     def CCCard(self, minp, dinp):
         moapt=-1,0;    doapt=-1,0#;    dou=-1;    mou=-1
-        test = False    #        rules = rule()
+        test = False; errmsg=''    #        rules = rule()
         #if rules.validMove: '''# remove?!?!?!?!?!?!?!??!?!'''
         self.reasonx = rules.validNextCCCard(self.tablown,minp,dinp,test)
         if rules.movnotdifcolr_1 and self.verbose:
@@ -342,7 +352,7 @@ class Tableau(Tableau_dataclass):
             minp,  dinp)
             if str(self.tablown[doapt[0]+1][doapt[1]]) != BLANKCARD:
                 self.moveing = False            
-                self.reasonx.append(f'Dest Not Empty: self.tablown[{doapt[0]+1}][{doapt[1]}]{str(self.tablown[doapt[0]+1][doapt[1]])}')
+                errmsg = errmsg + (f'Dest!_: tablow[{doapt[0]+1}][{doapt[1]}]{str(self.tablown[doapt[0]+1][doapt[1]])}')
             elif str(self.tablown[moapt[0]+1][moapt[1]]) != BLANKCARD and\
                                   moapt[0] != 0:
                 moapt, doapt = self.handlemultimove(moapt, doapt)
@@ -483,13 +493,14 @@ class Tableau(Tableau_dataclass):
         return running
     
     def handle_Re_Start(self, running, gameinit=False, restartLit=''):    
-        '''self.gameinit=gameinit
+        '''self.gameinit=gameinit        
         if not gameinit:
             Tableau_dataclass.__init__()
             Tableau_dataclass.__post_init__()
             gameinit=True;self.gameinit=True
             pass'''
-        answer = brichp.getAnswer(f'\n\n{CENTERSPACES}Enter  Q|uit N|ewGame{restartLit}: ')
+        print();print();reason=[]
+        answer = brichp.getAnswer(question=f'Enter  Q|uit N|ewGame{restartLit}: ', reason=self.reasonx)
         lenAns=len(answer)
         self.typeposdict = type(self.posdict)
         if lenAns==1:
@@ -545,7 +556,7 @@ class Tableau(Tableau_dataclass):
     def handleAnswer(self, running, dek, tablown):
         self.gtabl = dpcopy(tablown)
         self.posdicttype = str(type(self.posdict))
-        answer = brichp.getAnswer();lenAns=len(answer)
+        answer = brichp.getAnswer( f'card, dest|FF,GG,Q: ',self.reasonx);lenAns=len(answer)
         self.moveing=True#try:    
         if lenAns < 1 or lenAns > 5:
             self.moveing = False
@@ -606,7 +617,7 @@ class Tableau(Tableau_dataclass):
         validMove=True;noAbend=False
         minp, dinp = self.makeInputUppercase(str(minp), str(dinp))
         copytabl = dpcopy(self.tablown)
-        rules.noFoundationAsMover(copytabl, minp)
+        errmsg = rules.noFoundationAsMover(copytabl, minp)
         if not rules.moveing:    self.moveing=False
         if dinp[1] == 'G' and self.moveing:
             dinp = 'GG';   self.GGCard(minp)
@@ -621,7 +632,9 @@ class Tableau(Tableau_dataclass):
         #rp(f'From cardsfrommsucse:{moapt1=}, {doapt1=}')
         #dek.richPrintTablow()
         #except:    rp('if len(answer) not in [1,4,5]:')
+        self.reasonx.append(errmsg)
         if validMove and self.moveing and not noAbend:
+            
             bsqlt3.gamePrintTableau(self.tablown, self.reasonx)  #tablow = self.handleWeWon(tablow)
             self.reasonx = []    
         return running
