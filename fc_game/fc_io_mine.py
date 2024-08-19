@@ -275,8 +275,8 @@ class SQLiteIO(object):
                 self.currentMoveId += self.noOfRows2Move 
         running = True
         if self.needAnswer:
-            running, tablow, self.lTblRows = self.getSpecificTablowDisplay(\
-            running, tablow,  self.currentMoveId)
+            #running, tablow, self.lTblRows = 
+            self.getSpecificTablowDisplay( running, tablow,  self.currentMoveId)
             #if not self.reason: self.reason=[]
             #self.gamePrintTableau(tablow, self.reason)
         return running,self.needAnswer, tablow, self.reason, self.lTblRows
@@ -412,7 +412,6 @@ class SQLiteIO(object):
         self.cursorSQL3.execute(sqll)#, ('john@example.com', 'mypassword'))
         self.sqlcreateslTblRows()
         #running, tablow = self.convertSQL2Tablo()
-        return running, tablow, self.lTblRows
     
         
     def gamePrintTableau(self, tablow,reason,newGameFlag=False):

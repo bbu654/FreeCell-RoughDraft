@@ -174,7 +174,7 @@ if __name__ == '__main__':
             #if running:            #    game.checkNewGameRestartFlags()
             game.running=running
         """Need to update posdic everywhere"""
-        
+        #['undermove!blank']
         """Need 2 add multi_Card_Move   Turn test to PROD"""
 '''foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
 foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit

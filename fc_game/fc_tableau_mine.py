@@ -193,6 +193,7 @@ class Tableau(Tableau_dataclass):
         bsqlt3.gamePrintTableau(self.tablown, self.reasonx, self.newGameflag)
         self.reasonx = []
         #imdjs=self.tablown[2][2].suit()
+
         return True,deckA
         # 
     
@@ -379,14 +380,14 @@ class Tableau(Tableau_dataclass):
         if blankcolumns>1 and numOf0InFC >1: # 3                     2     4
             self.movnum = numOf0InFC+(numOf0InFC*blankcolumns)-1
         else: 
-            self.movnum = numOf0InFC+blankcolumns
+            self.movnum = numOf0InFC+blankcolumns + 1
         if lastofrow + 1 - firstorow > self.movnum:
             self.moveing = False
             self.reasonx.append(f'undermove!blank')
         for coltst in range(firstorow+1,lastofrow+1):
             if str(self.cpytblwn[coltst][moapt[1]]) not in nextCard[str(self.cpytblwn[coltst-1][moapt[1]])]:
                 self.moveing = False
-                self.reasonx.append(f'{self.cpytblwn[coltst][moapt[1]]} not in nextCard{self.cpytblwn[coltst-1][moapt[1]]}[{nextCard[self.cpytblwn[coltst-1][moapt[1]]]}]')
+                self.reasonx.append(f'{str(self.cpytblwn[coltst][moapt[1]])} not in nextCard{self.cpytblwn[coltst-1][moapt[1]]}[{nextCard[self.cpytblwn[coltst-1][moapt[1]]]}]')
                 break
         if self.moveing:
             zz=0
