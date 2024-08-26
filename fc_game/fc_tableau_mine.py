@@ -1,6 +1,7 @@
 from copy import deepcopy as dpcopy
 from dataclasses import dataclass, field
 from tabnanny import check
+import webbrowser
 
 from rich import print as rp
 from rich.console import Console
@@ -58,6 +59,7 @@ class Tableau_dataclass(StateFlags):
     maxmvid: int  = -1
     gameid:  int  = -1
     moveid:  int  = -1
+    answall: str  = ''
     tablown: list = field(default_factory=list) 
     sbckN4h: list = field(default_factory=list)    #in fc_io_mine: sqlite3 
     reasonx: list = field(default_factory=list)   
@@ -163,6 +165,7 @@ class Tableau(Tableau_dataclass):
         self.winning = False
         self.verbose = False
         self.gtabl1 = dpcopy(self.posdict)
+        self.answall = 'O   '
         dek = deck(); dek.shuffle()
         if testDeck==None:
             deckA,deckB=dek.turnTestdeckIntoDeck()            #tablow1=dek.newGame()            
@@ -387,7 +390,7 @@ class Tableau(Tableau_dataclass):
         for coltst in range(firstorow+1,lastofrow+1):
             if str(self.cpytblwn[coltst][moapt[1]]) not in nextCard[str(self.cpytblwn[coltst-1][moapt[1]])]:
                 self.moveing = False
-                self.reasonx.append(f'{str(self.cpytblwn[coltst][moapt[1]])} not in nextCard{self.cpytblwn[coltst-1][moapt[1]]}[{nextCard[self.cpytblwn[coltst-1][moapt[1]]]}]')
+                self.reasonx.append(f'{str(self.cpytblwn[coltst][moapt[1]])} not in nextCard{self.cpytblwn[coltst-1][moapt[1]]}[{nextCard[str(self.cpytblwn[coltst-1][moapt[1]])]}]')
                 break
         if self.moveing:
             zz=0
@@ -470,7 +473,8 @@ class Tableau(Tableau_dataclass):
         for errchk in range(4):
             if str(self.tablown[0][errchk]) != BLANKCARD:
                 return True
-        bsqlt3.insertCurrentTablownAsMoveid2(dpcopy(self.tablown),tempmoveid=1)
+        #addans = dpcopy(self.tablown)
+        bsqlt3.insertCurrentTablownAsMoveid2(dpcopy(self.tablown),tempmoveid=1,ansall=self.answall)
         #############################################
         running, idx4lastcards, maxidxoflc = self.getidx4lastcards(\
         running)
@@ -506,11 +510,13 @@ class Tableau(Tableau_dataclass):
         self.typeposdict = type(self.posdict)
         if lenAns==1:
             answer=answer.upper()
-            if answer in ["N","R","Q"]:
+            if answer in ["N","R","H","Q"]:
                 if answer == "N":
                     running, dek = self.NewGame()
                 if answer == "R":
                     dek = self.restartfromdb()
+                if answer == "H":
+                    webbrowser.open_new_tab('fc_help_mine.html')
                 if answer == "Q":
                     running = False; dek = None; self.tablown = []
                 if answer not in ['N','R','Q']:
@@ -524,7 +530,7 @@ class Tableau(Tableau_dataclass):
                 else:
                     ww.append(card(rank1.index(yy[0]),suit1.index(yy[1])))
             self.tablown.append(ww)'''
-            
+        self.answall += answer.ljust(4)    
         try:
             if type(running)      == bool: pass
         except:            running = True
@@ -575,10 +581,11 @@ class Tableau(Tableau_dataclass):
                 minp=answer[:2];    dinp=answer[2:]
             elif lenAns == 5:
                 minp=answer[:2];    dinp=answer[3:]
+        
         if (lenAns == 4 or lenAns == 5) and self.moveing:
             running = self.handle4char(\
             running, minp, dinp)
-
+        
         self.handleWeWon()
 
         if not running:
@@ -597,16 +604,20 @@ class Tableau(Tableau_dataclass):
     def handle1char(self, running, answer):
         '''handle Q(uit), \n
                   W(on),  \n
-                  S(tart) this Game from scratch
+                  H(elp), \n
+                  R(estart)\n
                   N(ew) GAME from scratch'''
         
         running                            = True
         answer=answer.upper()  if str(answer).isalpha() else answer
+        self.answall += answer.ljust(4)    
         if answer == 'Q':
             running = False
         if answer == 'W':
             running =self.testhandleWeWon(\
             running)
+        if answer == 'H':
+            webbrowser.open_new_tab('fc_help_mine.html')
         if answer == 'N':
             self.restartCurrentGameFromScratch = False
             self.beginANewGame                 = True
@@ -617,6 +628,7 @@ class Tableau(Tableau_dataclass):
     def handle4char(self, running, minp, dinp):
         validMove=True;noAbend=False
         minp, dinp = self.makeInputUppercase(str(minp), str(dinp))
+        self.answall += minp + dinp
         copytabl = dpcopy(self.tablown)
         errmsg = rules.noFoundationAsMover(copytabl, minp)
         if not rules.moveing:    self.moveing=False
@@ -644,6 +656,7 @@ class Tableau(Tableau_dataclass):
         answer=answer[0].upper()+answer[1:]  if str(answer)[0].isalpha() else answer
         self.currentMoveId = currentMoveId
         self.noOfRows2Move=0; self.needAnswer=True
+        self.answall += answer
         if answer[0] == 'B' or answer[0] == 'F':
             try:
                 if str(answer[1:]).isdigit():

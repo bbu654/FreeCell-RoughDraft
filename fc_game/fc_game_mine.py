@@ -165,11 +165,11 @@ class Game(object):
         return True, dek, tablow        
     '''
 if __name__ == '__main__':
-        running=True
+        running=True    #Need moves; help
         game=Game(running)#,restartCurrentGameFromScratch=True,beginANewGame = False)
         running, dek, tablow = game.tablClass.handle_Re_Start(running, game.init1st, ' R|estartLastGameFromDB')
         #game.checkNewGameRestartFlags()
-        while game.running:
+        whi le game.running:
             running, dek, tablow = game.runit(running, dek, tablow)
             #if running:            #    game.checkNewGameRestartFlags()
             game.running=running

@@ -224,7 +224,7 @@ class SQLiteIO(object):
                 elif idxGamem>2:
                     self.lTblRows.append(mfield)
 
-    def insertTablow(self,tablow,gameid,moveid,dontchgmoveid=False):
+    def insertTablow(self,tablow,gameid,moveid,dontchgmoveid=False,ansall=''):
         """ self.fieldNames4games[:10]=['dbid', 'gameid', 'moveid', 
         'row0', 'row1', 'row2', 'row3', 'row4', 'row5', 
         'row6']||||self.row0Index=3"""
@@ -233,7 +233,7 @@ class SQLiteIO(object):
         if        self.dontchgmoveid == True:
             self.savedmoveid=moveid
             moveid = self.tempmoveid
-        sqld, tablow = self.convertTablo2SQL(tablow, gameid, moveid) 
+        sqld, tablow = self.convertTablo2SQL(tablow, gameid, moveid, ansall) 
         self.cursorSQL3.execute(sqld)#, ('john@example.com', 'mypassword'))
         #INSERT INTO 'game' ('gameid', 'moveid', 'subtitle`, `author`, `promocode`, `emaildate`, `picturename`, `description`, `promoline`, `forwardt`) VALUES
         # Commit changes
@@ -282,7 +282,7 @@ class SQLiteIO(object):
         return running,self.needAnswer, tablow, self.reason, self.lTblRows
     #running,self.moveing, tablow, self.reason
 
-    def convertTablo2SQL(self, tablow, gameid, moveid):
+    def convertTablo2SQL(self, tablow, gameid, moveid, ansall=''):
         snames=self.fieldNames4games;srowidx=self.row0Index
         self.gameid=gameid   
         self.moveid=moveid
@@ -309,10 +309,12 @@ class SQLiteIO(object):
                 sqlb.append(sqlc)
             else:
                 continue
-        
+        if ansall != '':
+            sqlb.append(ansall)
         #self.rowstring= f" VALUES ({self.gameid}, {self.moveid}, "
         #self.valuestr = f"INSERT INTO 'Game' ({snames[1]}, {snames[2]}, "
         self.SQLvalues = f"{tuple(sqlb[idxcv] for idxcv in range(len(sqlb)))}; " 
+        self.SQLvalues 
         #self.rowstring = f" VALUES {self.SQLvalues}; "
         #numbers = [1, 2, 3, 4, 5];    squares = tuple(x**2 for x in numbers)
         #print(squares)  # Output: (1, 4, 9, 16, 25)
@@ -422,12 +424,12 @@ class SQLiteIO(object):
         self.brichp1.printTableau(tablow,reason)                    
         self.newGameFlag=False
 
-    def insertCurrentTablownAsMoveid2(self, tablow,tempmoveid=1):
+    def insertCurrentTablownAsMoveid2(self, tablow,tempmoveid=1, ansall=''):
         self.newGameFlag   = False
         self.dontchgmoveid = True
         self.tempmoveid    = tempmoveid
         self.rmpmid        = self.moveid
-        tablow, self.gameid, self.moveid = self.insertTablow(tablow,self.gameid,tempmoveid,self.dontchgmoveid)
+        tablow, self.gameid, self.moveid = self.insertTablow(tablow,self.gameid,tempmoveid,self.dontchgmoveid,ansall)
         self.moveid        = self.rmpmid
         self.dontchgmoveid = False
 

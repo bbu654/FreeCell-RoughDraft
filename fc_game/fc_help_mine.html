@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+</head>
+
+<body>
+
+    </div>
+    <h2 id="introduction">Introduction</h2>
+    <p>
+        Freecell is a classic in the rank of patience games. It's not as punishing as many other solitaires, as all
+        cards
+        are revealed from the start and most Freecell games
+        can be won from the outset unlike many other Solitaires that may contain impossible configurationsm, but it's
+        tricky
+        enough that it remains ever interesting as one
+        tries to puzzle out what cards should move where, and how best to utilize the limited free cells on offer.
+    </p>
+
+
+    <h2>The objective</h2>
+    <p>
+        As with most patience games, to win FreeCell, you must get all the cards onto the Foundations. The Foundations
+        are
+        ordered by suit
+        and rank, each Foundation has one suit and you must put the cards onto them in the order Ace 2 3 4 5 6 7 8 9 10
+        Jack
+        Queen King.
+    </p>
+
+    <h2>The Piles</h2>
+    <p>
+        There are three different types of piles in FreeCell Solitaire. They are:
+    </p>
+    <ul>
+        <li><strong>The Free Cells:</strong> The four piles in the upper left corner.</li>
+        <li><strong>The Foundations:</strong> The four piles in the upper right corner.</li>
+        <li><strong>The Tableau:</strong> The eight piles that make up the main table.</li>
+    </ul>
+
+    <h2>The setup</h2>
+    <p>
+        Deal out the cards to the 8 tableus. The Tableau piles are numbered from 1 to 8, piles 1-4 start with 7 cards
+        each,
+        piles 5-8
+        with 6 cards each. The Foundations and Free Cells are empty.
+    </p>
+
+
+    <h2>Allowed moves</h2>
+
+    <ul>
+        <li><strong>Move one or more cards from one Tableau pile to another.</strong> You can move the top card of
+            a pile on the Tableau onto another Tableau pile, if that pile's top card is one higher than the moved card
+            and
+            in a
+            different color. For example, you could move a red 6 onto a black 7. If the top cards on a Tableau pile are
+            ordered,
+            e.g. you have red 6, black 5, red 4 as the top cards, then you can click the red 6 and move all of them
+            together
+            onto
+            another Tableau pile that has a black 7 as its top card. HOWEVER, there is a limitation to how many ordered
+            cards you
+            can move together. The number of cards you can move together is basically the number of empty free cells and
+            empty tableaus + 1. So, if you have
+            2 free cells empty you can move 3 cards together. If you have all 4 free cells empty you can move 5 cards.
+            If
+            you have 3 free cells
+            and 4 empty tableaus you can move 8 cards together. Moving many cards
+            together is basically just a convenience the game provides. In the strictest sense you should always move
+            one at
+            a time, but
+            if you have 4 ordered cards and 3 free cells then you could trivially move the top 3 ordered cards to the
+            free
+            cells, then move
+            the fourth card and then move the 3 cards from the free cells back onto the fourth card. So, for convenience
+            the
+            game allows you
+            to move n+1 cards together, where n is the number of free cells.<br> If you have an empty Tableau pile then
+            you
+            can move any card there.</li>
+
+        <li>
+            <strong>Move a single card onto a Free Cell.</strong> You can always move the top card of any Tableau Pile,
+            Free
+            Cell or
+            Foundation onto a Free Cell if it's empty. Free Cell's can only hold a single card at a time.
+        </li>
+        <li>
+            <strong>Move a card from a Free Cell.</strong> You can move a card from a Free Cell onto a Foundation if
+            it's in
+            the same
+            suit and one higher than the Foundation's top card. Or you can move a card from a Free Cell onto a Tableau
+            pile
+            if the
+            card is one lower and in a different color than the Tableau pile's top card. E.g. you could move a red 5
+            from a
+            Free Cell
+            onto a Tableau pile where the current top card was a black 6.
+        </li>
+        <li>
+            <strong>You can move a Tableau card onto the Foundations.</strong> You can either drag the cards onto the
+            Foundation,
+            or just double click it and then it will go there by itself. When the Free Cells are empty and all cards on
+            the
+            Tableau
+            are arranged in 4 piles and each of the piles has been ordered in descending order with alternating
+            red/black
+            cards then
+            the Tableau will clear itself, since at that point you are guaranteed to win the game.
+        </li>
+        <li>
+            <strong>You can Undo as many times as you like.</strong> The game offers unlimited undos. Each Undo counts
+            as a
+            new move though,
+            so if you're trying to win the game in as few moves as possible you should be careful about how many undos
+            you
+            use.
+        </li>
+    </ul>
+
+    <h2 id="come-play">And that's it!</h2>
+    <p class="center">
+        Want to play Freecell and put your newfound skills to the test? <a href="/freecell/">Play a round at
+            Cardgames.io</a>.
+    </p>
+
+    </div>
+</body>
+
+</html>
+
+<!--import webbrowser
+
+file_path = 'index.html'
+
+html_string = """
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <h2>bobbyhadz.com</h2>
+
+    <h2 style="background-color: lime;">google.com</h2>
+  </body>
+</html>
+"""
+
+with open(file_path, 'w', encoding='utf-8') as html_file:
+    html_file.write(html_string)
+
+webbrowser.open_new_tab(file_path)
+-->

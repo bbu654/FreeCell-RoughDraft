@@ -58,9 +58,9 @@ class Rules(object):
             errmsg +=(f"{answer} 2 long/short")
         elif lenAnswer == 1:
             answer = str(answer).upper()  if str(answer).isalpha() else answer
-            if answer not in ['N','R','W','Q']:
+            if answer not in ['N','R','W','H','Q']:
                 self.validAnswer = False
-                errmsg +=(f"{answer} !in NRWQ")
+                errmsg +=(f"{answer} !in NRWHQ")
         elif lenAnswer > 1 and lenAnswer < 4:
             if answer[0] not in ['B', 'F']:
                 self.validAnswer = False
