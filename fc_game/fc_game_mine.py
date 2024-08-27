@@ -161,7 +161,7 @@ class Game(object):
                     ww.append(card(rank1.index(yy[0]),suit1.index(yy[1])))
             tablow.append(ww)'''
         
-    ''' game.tablClass.gamePrintTableau(tablow)        
+    ''' game.tablClass.game PrintTableau(tablow)        
         return True, dek, tablow        
     '''
 if __name__ == '__main__':
@@ -169,7 +169,7 @@ if __name__ == '__main__':
         game=Game(running)#,restartCurrentGameFromScratch=True,beginANewGame = False)
         running, dek, tablow = game.tablClass.handle_Re_Start(running, game.init1st, ' R|estartLastGameFromDB')
         #game.checkNewGameRestartFlags()
-        whi le game.running:
+        while game.running:    #f bsqlt3(tableau)***inse(io)
             running, dek, tablow = game.runit(running, dek, tablow)
             #if running:            #    game.checkNewGameRestartFlags()
             game.running=running

@@ -107,7 +107,7 @@ class Tableau_dataclass(StateFlags):
         running=True#self.lTblRows=sql3class.readlast record()
         cardi=[]
         if self.lTblRows !=None and len(self.lTblRows) < 2:
-            self.gameid,self.moveid,self.lTblRows = bsqlt3.readlastrecord()
+            self.gameid,self.moveid,self.answall,self.lTblRows = bsqlt3.readlastrecord()
         #self.gameid+=1     #self.moveid+=1    #tablow = fromsql2tablo
         for listoflists in self.lTblRows:
             if len(listoflists) != 16: 
@@ -134,7 +134,7 @@ class Tableau_dataclass(StateFlags):
         for idxm,rown in enumerate(self.tablown):
             for idxn, itemn in enumerate(rown):
                 if str(itemn) == 'xx':
-                    self.tablown[idxm][idxn] = BLANKCARD    #Tableau.gamePrintTableau(self.tablown)
+                    self.tablown[idxm][idxn] = BLANKCARD    #Tableau.gamePrintTableau(self.answall,self.tablown)
         
         return 
 
@@ -144,7 +144,7 @@ class Tableau(Tableau_dataclass):
         Tableau_dataclass.__init__(self)#return super().__post_init__()
         print(f'entr: Tableau.__init__')
         self.gameid=bsqlt3.readFirstGamesRec()
-        self.gameid,self.moveid,self.lTblRows=bsqlt3.readlastrecord()
+        self.gameid,self.moveid,self.answall,self.lTblRows=bsqlt3.readlastrecord()
         if bsqlt3.allMoveSQLFwdBack == []:
             self.allMoveSQLFwdBack = []
             self.sbckN4h = []
@@ -193,7 +193,7 @@ class Tableau(Tableau_dataclass):
         self.gameid+=1;self.moveid=0
         dek.display(8)
         self.newGameflag=True
-        bsqlt3.gamePrintTableau(self.tablown, self.reasonx, self.newGameflag)
+        bsqlt3.gamePrintTableau(self.answall[-4:],self.tablown, self.reasonx, self.newGameflag)
         self.reasonx = []
         #imdjs=self.tablown[2][2].suit()
 
@@ -474,7 +474,7 @@ class Tableau(Tableau_dataclass):
             if str(self.tablown[0][errchk]) != BLANKCARD:
                 return True
         #addans = dpcopy(self.tablown)
-        bsqlt3.insertCurrentTablownAsMoveid2(dpcopy(self.tablown),tempmoveid=1,ansall=self.answall)
+        bsqlt3.insertCurrentTablownAsMoveid2(self.answall,dpcopy(self.tablown),tempmoveid=1)
         #############################################
         running, idx4lastcards, maxidxoflc = self.getidx4lastcards(\
         running)
@@ -488,7 +488,7 @@ class Tableau(Tableau_dataclass):
                         self.GGCard(str(self.tablown[idx4lastcards[column]][column]))
                 running, idx4lastcards, maxidxoflc = self.getidx4lastcards(\
                 running)
-                bsqlt3.gamePrintTableau(self.tablown, self.reasonx)
+                bsqlt3.gamePrintTableau(self.answall[-4:], self.tablown, self.reasonx)
                 self.reasonx = []
                 self.handleWeWon()
                         #if self.validGG:
@@ -521,7 +521,7 @@ class Tableau(Tableau_dataclass):
                     running = False; dek = None; self.tablown = []
                 if answer not in ['N','R','Q']:
                     running = True; dek = None; self.tablown = []
-                #def restartFromSQLite3DB(self):    #    tablow=self.restart_fromdb()        #bsqlt3.gamePrintTableau(tablow, self.reasonx)        
+                #def restartFromSQLite3DB(self):    #    tablow=self.restart_fromdb()        #bsqlt3.gamePrintTableau(self.answall[-4:],tablow, self.reasonx)        
             '''for xx in outd:        
             ww=[]
             for yy in xx:
@@ -648,7 +648,7 @@ class Tableau(Tableau_dataclass):
         self.reasonx.append(errmsg)
         if validMove and self.moveing and not noAbend:
             
-            bsqlt3.gamePrintTableau(self.tablown, self.reasonx)  #tablow = self.handleWeWon(tablow)
+            bsqlt3.gamePrintTableau(self.answall[-4:],self.tablown, self.reasonx)  #tablow = self.handleWeWon(tablow)
             self.reasonx = []    
         return running
 
@@ -684,7 +684,7 @@ class Tableau(Tableau_dataclass):
             if self.moveing:
                 self.backfwd = True
                 self.convertSQL2Tablo()
-                bsqlt3.gamePrintTableau(self.tablown, self.reasonx, False)
+                bsqlt3.gamePrintTableau(self.answall[-4:], self.tablown, self.reasonx, False)
                 self.reasonx = []
 
         return
@@ -792,7 +792,7 @@ class Tableau(Tableau_dataclass):
         dek = deck()
         self.convertSQL2Tablo(True)   
         bsqlt3.readAllRowsOnRestart()
-        bsqlt3.gamePrintTableau(self.tablown, self.reasonx)
+        bsqlt3.gamePrintTableau(self.answall[-4:],self.tablown, self.reasonx)
         self.reasonx = []
         return dek
 
@@ -822,7 +822,7 @@ class Tableau(Tableau_dataclass):
                 '5Cxxxxxxxxxxxxxx']
         cardi=[]    
         if self.lTblRows !=None and len(self.lTblRows) > 0:
-            self.gameid,self.moveid,self.lTblRows = bsqlt3.readlastrecord()
+            self.gameid,self.moveid,self.answall,self.lTblRows = bsqlt3.readlastrecord()
         #self.gameid+=1
         #self.moveid+=1
         #self.tablown = fromsql2tablo
@@ -852,7 +852,7 @@ class Tableau(Tableau_dataclass):
             for idxn, itemn in enumerate(rown):
                 if str(itemn) == 'xx':
                     self.tablown[idxm][idxn] = BLANKCARD
-        bsqlt3.gamePrintTableau(self.tablown, self.reasonx)
+        bsqlt3.gamePrintTableau(self.answall[-4:],self.tablown, self.reasonx)
         return dek,self.tablown,running'''
 
     def validdestempty(self):
