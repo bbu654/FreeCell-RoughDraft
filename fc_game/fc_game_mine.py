@@ -165,6 +165,9 @@ class Game(object):
         return True, dek, tablow        
     '''
 if __name__ == '__main__':
+        '''TEST i,i22,iiii,iiiiii,,b11,f2
+           add tkinter option
+           remove insertTablow(Moveid2'''
         running=True    #Need moves; help
         game=Game(running)#,restartCurrentGameFromScratch=True,beginANewGame = False)
         running, dek, tablow = game.tablClass.handle_Re_Start(running, game.init1st, ' R|estartLastGameFromDB')
@@ -175,7 +178,11 @@ if __name__ == '__main__':
             game.running=running
         """Need to update posdic everywhere"""
         #['undermove!blank']
-        """Need 2 add multi_Card_Move   Turn test to PROD"""
+        """
+            Test SQLite3-table the test answers/tablow
+        
+        
+        Need 2 add multi_Card_Move   Turn test to PROD"""
 '''foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
 foundation=5 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit
 foundation=7 = list(SYMBOL.keys()).index(minp[1]) + 4 - 1)    #-1 for the x in listsuit

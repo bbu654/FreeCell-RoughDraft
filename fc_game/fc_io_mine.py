@@ -235,7 +235,7 @@ class SQLiteIO(object):
         self.ansrall       = ansrall
         if        self.dontchgmoveid == True:
             self.savedmoveid=moveid
-            moveid = self.tempmoveid
+            #moveid = self.tempmoveid
         sqld, tablow = self.convertTablo2SQL(ansrall,tablow, gameid, moveid) 
         self.cursorSQL3.execute(sqld)#, ('john@example.com', 'mypassword'))
         #INSERT INTO 'game' ('gameid', 'moveid', 'subtitle`, `author`, `promocode`, `emaildate`, `picturename`, `description`, `promoline`, `forwardt`) VALUES
@@ -407,9 +407,10 @@ class SQLiteIO(object):
         self.cursorSQL3.execute(sqlk)#, ('john@example.com', 'mypassword'))
         self.lTblRowsOR=self.cursorSQL3.fetchmany()
         self.allMoveSQLFwdBack=[]
-        print()
+        print();self.bbuanswer=''
         for row in self.lTblRowsOR:  
             self.allMoveSQLFwdBack.append(row)
+            self.bbuanswer += row[3]
 
     def  getSpecificTablowDisplay(self, running, tablow, currentMoveId):   
         self.currentMoveId = currentMoveId
@@ -428,17 +429,11 @@ class SQLiteIO(object):
             self.maxmoveid += 1
         self.brichp1.printTableau(tablow,reason)                    
         self.newGameFlag=False
-
-    def insertCurrentTablownAsMoveid2(self, ansrall, tablow,tempmoveid=1):
-        self.newGameFlag   = False
-        self.dontchgmoveid = True
-        self.ansrall       = ansrall
-        self.tempmoveid    = tempmoveid
-        self.rmpmid        = self.moveid
-        tablow, self.gameid, self.moveid = self.insertTablow(self.ansrall,tablow,self.gameid,tempmoveid,self.dontchgmoveid)
-        self.moveid        = self.rmpmid
-        self.dontchgmoveid = False
-
+    def updateMoveid1(self,ansrall):
+        sqle = f"UPDATE Game SET play = '{ansrall}' WHERE gameid = {self.gameid} AND moveid = 1;"
+        self.cursorSQL3.execute(sqle)
+        self.conn.commit()
+        rp(f'Update Sucessful: {sqle=}')
 
     def closeconn(self):
             self.conn.close()

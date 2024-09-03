@@ -474,7 +474,7 @@ class Tableau(Tableau_dataclass):
             if str(self.tablown[0][errchk]) != BLANKCARD:
                 return True
         #addans = dpcopy(self.tablown)
-        bsqlt3.insertCurrentTablownAsMoveid2(self.answall,dpcopy(self.tablown),tempmoveid=1)
+        bsqlt3.updateMoveid1(self.answall)
         #############################################
         running, idx4lastcards, maxidxoflc = self.getidx4lastcards(\
         running)
@@ -521,6 +521,8 @@ class Tableau(Tableau_dataclass):
                     running = False; dek = None; self.tablown = []
                 if answer not in ['N','R','Q']:
                     running = True; dek = None; self.tablown = []
+        elif answer[0].upper == 'T' and answer[1:].isdigit:
+            pass#bsqlt3.handletestrun(answer)
                 #def restartFromSQLite3DB(self):    #    tablow=self.restart_fromdb()        #bsqlt3.gamePrintTableau(self.answall[-4:],tablow, self.reasonx)        
             '''for xx in outd:        
             ww=[]
@@ -656,7 +658,7 @@ class Tableau(Tableau_dataclass):
         answer=answer[0].upper()+answer[1:]  if str(answer)[0].isalpha() else answer
         self.currentMoveId = currentMoveId
         self.noOfRows2Move=0; self.needAnswer=True
-        self.answall += answer
+        self.answall += answer.ljust(4)    
         if answer[0] == 'B' or answer[0] == 'F':
             try:
                 if str(answer[1:]).isdigit():
@@ -792,6 +794,7 @@ class Tableau(Tableau_dataclass):
         dek = deck()
         self.convertSQL2Tablo(True)   
         bsqlt3.readAllRowsOnRestart()
+        self.answall = bsqlt3.bbuanswer
         bsqlt3.gamePrintTableau(self.answall[-4:],self.tablown, self.reasonx)
         self.reasonx = []
         return dek
@@ -884,4 +887,23 @@ class Tableau(Tableau_dataclass):
         dinp=dinp[0]+dinp[1].upper() if str(dinp[1]).isalpha() else dinp
         return str(minp),str(dinp)
          
-    
+    def answerfromtest(self):
+        z='N   3CFF5D6C4C5D3D4CTSFFASGGJSQH6HFF6DFF8D9C7S8D6D7SKDZZ2SGG3SGG3C4H5HFFQCKDB16 4C5D3D4CTSFFASGGJSQDJSQH6HFF6DFF8D9C7S8D6D7SKDZZ2SGG3SGG3C4H5HFFQCKDJCFFTHJS8S9D2D3CB22 5H6C3D4CQCKDJCQHTHJC9DTCTSFFASGG8S9D5DFF6HFF9CTHQSKHADGG2DGG7D8SKCZZACGGJDQSTSJD6S7D5D6SJSZZ6DFF8D9C7S8D8DZZ6D7STHJSQHKCTHJC8D9C9HTS3DGG4DGG5DGG6DGG7CFFAHGG8C9HKDZZ2SGG3SGG4HFF2CGG4SGG5H6S7CZZ6H7CJSFF4HZZ3C4H7D8C6CFFJHQCTCJH3H4CTDFFJSQDTDJS9STD5S6H4H5SKSZZQDKS7H8S8H9S5CFF7C8H2HGG6C7H5CZZW   '
+        '''1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890
+        Chk if there r 4'''
+        oldx = 0;listz=[]
+        lenz=len(z)
+        if len(z)%4 == 0:
+        #if True:
+            for x in range(4, len(z) + 1, 4):
+                #if x > 0:    #firsttime both r 0, so u get a ''
+                    listz.append(z[oldx:x])
+                    oldx=x
+
+        strzz = ''.join(listz)
+        ox=0
+        listy = [z[x-4:x] for x in range(4, len(z) + 1, 4)]
+        rp(f'{strzz=}    listz\n{listz}')
+        for xx,yy in enumerate(listy):
+            if xx%23 == 0: print()
+            print(yy,end=' ')
