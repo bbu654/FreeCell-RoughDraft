@@ -405,7 +405,7 @@ class SQLiteIO(object):
     def readAllRowsOnRestart(self):
         sqlk=f'SELECT * FROM Game WHERE gameid = {self.gameid};'
         self.cursorSQL3.execute(sqlk)#, ('john@example.com', 'mypassword'))
-        self.lTblRowsOR=self.cursorSQL3.fetchmany()
+        self.lTblRowsOR=self.cursorSQL3.fetchall()
         self.allMoveSQLFwdBack=[]
         print();self.bbuanswer=''
         for row in self.lTblRowsOR:  

@@ -166,7 +166,7 @@ class Game(object):
     '''
 if __name__ == '__main__':
         '''TEST i,i22,iiii,iiiiii,,b11,f2
-           add tkinter option
+           add tkinter option, autoRun
            remove insertTablow(Moveid2'''
         running=True    #Need moves; help
         game=Game(running)#,restartCurrentGameFromScratch=True,beginANewGame = False)
