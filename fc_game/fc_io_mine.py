@@ -15,6 +15,9 @@ rule=Rule()
 
 class PrintItBBU(object):
     def __init__(self) -> None:
+        self.countertestrun = 0
+        self.testrun = False
+        self.inputfromtest = []
         pass
     # rp(f'{nextCard}',sep=' ',end='')rp(f'{nextCard}',sep=' ',end='')
     def printTableau(self,tablow, reason=[]):
@@ -144,6 +147,14 @@ class PrintItBBU(object):
             
         
         return answer
+    def getinputorloopin(self, question):
+        if self.testrun:
+            self.countertestrun += 1
+            answer = self.inputfromtest[self.countertestrun]
+        pass
+    
+    #need bsqlt3.getanslist4testg():settestrun;countertestrun 
+    #make str2listAnswers
 class SQLiteIO(object):
     xGamesFields=[	"dbid",	 "gameid", "solved", "test", "currentgameid",
                     "row0",  "row1",   "row2",	 "row3",	 "row4",  "row5",  "row6",
@@ -225,6 +236,14 @@ class SQLiteIO(object):
                     self.ansrall=mfield
                 elif idxGamem>3:
                     self.lTblRows.append(mfield)
+    def getanswers4test(self, answer, currentGameid):
+        self.currentGameid = currentGameid
+        sqlm=f'SELECT * FROM Game WHERE gameid = {self.currentGameid} AND moveid = 1;'
+        #try:
+        self.cursorSQL3.execute(sqlm)#, ('john@example.com', 'mypassword'))
+        self.sqlcreateslTblRows()
+        pass
+
 
     def insertTablow(self,ansrall,tablow,gameid,moveid,dontchgmoveid=False):
         """ self.fieldNames4games[:10]=['dbid', 'gameid', 'moveid', 

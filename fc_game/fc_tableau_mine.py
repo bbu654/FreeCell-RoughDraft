@@ -567,6 +567,14 @@ class Tableau(Tableau_dataclass):
         self.posdicttype = str(type(self.posdict))
         answer = brichp.getAnswer( f'card, dest|FF,GG,Q: ',self.reasonx);lenAns=len(answer)
         self.moveing=True#try:    
+        self.dealwithanswer(answer, running, dek, tablown)
+
+        if not running:
+            bsqlt3.closeconn()
+        
+        return running, dek, dpcopy(self.tablown)
+    def dealwithanswer(self, answer, running, dek, tablown):
+        lenAns = len(answer)
         if lenAns < 1 or lenAns > 5:
             self.moveing = False
             self.reasonx.append("!<1|>5 input 2 short/long!")
@@ -579,6 +587,9 @@ class Tableau(Tableau_dataclass):
             elif lenAns  >1 and lenAns<4:
                 self.handle23char(answer, self.moveid)
                 return running, dek, dpcopy(self.tablown)                
+            elif str(answer[0]).upper == 'T':
+                self.handleT(answer)
+                return running, dek, dpcopy(self.tablown)                
             elif lenAns == 4:
                 minp=answer[:2];    dinp=answer[2:]
             elif lenAns == 5:
@@ -589,12 +600,24 @@ class Tableau(Tableau_dataclass):
             running, minp, dinp)
         
         self.handleWeWon()
-
-        if not running:
-            bsqlt3.closeconn()
+    def handleT(self,answer):
+        answer=answer[0].upper()+answer[1:]  if str(answer)[0].isalpha() else answer
+        #self.currentMoveId = currentMoveId
+        self.noOfRows2Move=0; self.needAnswer=True
+        self.answall += answer.ljust(4)    
+        if answer[0] == 'T':
+            try:
+                if str(answer[1:]).isdigit():
+                    self.currentgameid=int(answer[1:])
+                    bsqlt3.getanswers4test(answer,self.currentgameid)
+            except:
+                rp(f"!input: {answer}")
+                self.needAnswer=False
+        else:
+            rp(f"!input: {answer}")
+            self.needAnswer=False
         
-        return running, dek, dpcopy(self.tablown)
-
+        pass
     def copyrow1ontbl(self):
         cpytbl=[]
         for irow,drow in enumerate(self.tablown):

@@ -418,14 +418,17 @@ class SQLiteIO(object):
         return self.gameid, self.moveid, self.lTblRows
        
         
-    def gamePrintTableau(self, newtablowDC,reason,newGameFlag=False):
+    def gamePrintTableau(self, ansrall,newtablowDC,reason,newGameFlag=False):
         self.newGameFlag = newGameFlag
+        self.ansrall     = ansrall
         newtablowDC.tablow,self.gameid,self.moveid = self.insertTablow(newtablowDC.tablow,self.gameid,self.moveid)
         if self.moveid == self.maxmoveid+1: 
             self.maxmoveid += 1
         self.brichp1.printTableau(newtablowDC.tablow,reason)                    
         self.newGameFlag=False
 
+    def getanswers4test(self, answer, currentGameid):
+        pass
 
     def closeconn(self):
             self.conn.close()
