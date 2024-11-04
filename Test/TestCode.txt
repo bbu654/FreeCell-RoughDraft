@@ -1,0 +1,48 @@
+#Test Script
+[mcu pico]
+serial: /dev/serial/by-id/usb-Klipper_rp2040_E6611032E3189637-if00 #Replace with your ID
+
+#Print out a message from all buttons
+[gcode_button Test_Button1]
+pin: ^!pico:gpio0
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 0'
+
+[gcode_button Test_Button2]
+pin: ^!pico:gpio1
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 1'
+
+[gcode_button Test_Button3]
+pin: ^!pico:gpio2
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 2'
+
+[gcode_button Test_Button4]
+pin: ^!pico:gpio3
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 3'
+
+[gcode_button Test_Button5]
+pin: ^!pico:gpio4
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 4'
+
+[gcode_button Test_Button6]
+pin: ^!pico:gpio5
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 5'  
+
+[gcode_button Test_Button7]
+pin: ^!pico:gpio28
+press_gcode:
+  RESPOND TYPE=echo MSG='Button 6'
+  
+#Led strip, defaults to purple
+[neopixel Button_Pad]
+pin: pico:gpio29
+chain_count:150
+color_order: GRB
+initial_RED: .10
+initial_GREEN: .0
+initial_BLUE: .10
